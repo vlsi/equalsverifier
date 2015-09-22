@@ -89,7 +89,7 @@ public final class TypeTag {
     }
 
     /**
-     * @inheritcDoc
+     * @inheritDoc
      */
     @Override
     public int hashCode() {
