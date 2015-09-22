@@ -34,7 +34,7 @@ import java.util.Map;
 public class PrefabValues {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_OBJECT_MAPPER = createPrimitiveObjectMapper();
     private final StaticFieldValueStash stash;
-    private final Map<Class<?>, Tuple<?>> values = new HashMap<>();
+    private final Map<TypeTag, Tuple<?>> values = new HashMap<>();
 
     public PrefabValues() {
         this(new StaticFieldValueStash());
@@ -72,7 +72,7 @@ public class PrefabValues {
      * @param black Another value of type T.
      */
     public <T> void put(Class<T> type, T red, T black) {
-        values.put(type, new Tuple<T>(red, black));
+        values.put(new TypeTag(type), new Tuple<>(red, black));
     }
 
     /**
@@ -94,7 +94,7 @@ public class PrefabValues {
      * @return True if prefabricated values exist for the specified class.
      */
     public boolean contains(Class<?> type) {
-        return values.containsKey(type);
+        return values.containsKey(new TypeTag(type));
     }
 
     /**
@@ -119,7 +119,7 @@ public class PrefabValues {
 
     @SuppressWarnings("unchecked")
     private <T> Tuple<T> getTuple(Class<T> type) {
-        return (Tuple<T>)values.get(type);
+        return (Tuple<T>)values.get(new TypeTag(type));
     }
 
     /**
@@ -138,7 +138,7 @@ public class PrefabValues {
             throw new ReflectionException("Type does not match value.");
         }
 
-        Tuple<?> tuple = values.get(type);
+        Tuple<?> tuple = values.get(new TypeTag(type));
         if (tuple == null) {
             throw new ReflectionException("No prefab values for " + type + " exist.");
         }
