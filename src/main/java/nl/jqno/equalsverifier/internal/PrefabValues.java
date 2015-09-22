@@ -103,8 +103,9 @@ public class PrefabValues {
      * @param type Class for which to return the prefabricated value.
      * @return The "red" prefabricated value for the specified type.
      */
+    @SuppressWarnings("unchecked")
     public <T> T getRed(Class<T> type) {
-        return getTuple(type).red;
+        return (T)getTuple(new TypeTag(type)).red;
     }
 
     /**
@@ -113,13 +114,14 @@ public class PrefabValues {
      * @param type Class for which to return the prefabricated value.
      * @return The "black" prefabricated value for the specified type.
      */
+    @SuppressWarnings("unchecked")
     public <T> T getBlack(Class<T> type) {
-        return getTuple(type).black;
+        return (T)getTuple(new TypeTag(type)).black;
     }
 
     @SuppressWarnings("unchecked")
-    private <T> Tuple<T> getTuple(Class<T> type) {
-        return (Tuple<T>)values.get(new TypeTag(type));
+    private <T> Tuple<T> getTuple(TypeTag typeTag) {
+        return (Tuple<T>)values.get(typeTag);
     }
 
     /**
