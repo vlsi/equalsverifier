@@ -127,20 +127,22 @@ public class PrefabValues {
     /**
      * Returns a prefabricated value for type which is not equal to value.
      *
-     * @param type Class for which to return a prefabricated value.
+     * @param typeTag TypeTag for the class for which to return a prefabricated
+     *          value.
      * @param value An instance of type.
      * @return A prefabricated value for type which is not equal to value.
      */
-    public Object getOther(Class<?> type, Object value) {
-        if (type == null) {
+    public Object getOther(TypeTag typeTag, Object value) {
+        if (typeTag == null) {
             throw new ReflectionException("Type is null.");
         }
 
+        Class<?> type = typeTag.getType();
         if (value != null && !type.isAssignableFrom(value.getClass()) && !wraps(type, value.getClass())) {
             throw new ReflectionException("Type does not match value.");
         }
 
-        Tuple<?> tuple = values.get(new TypeTag(type));
+        Tuple<?> tuple = values.get(typeTag);
         if (tuple == null) {
             throw new ReflectionException("No prefab values for " + type + " exist.");
         }

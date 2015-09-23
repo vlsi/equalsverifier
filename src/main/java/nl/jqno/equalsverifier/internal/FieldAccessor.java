@@ -270,16 +270,28 @@ public class FieldAccessor {
 
         @Override
         public void modify() throws IllegalAccessException {
-            Class<?> type = field.getType();
-            if (prefabValues.contains(type)) {
-                Object newValue = prefabValues.getOther(type, field.get(object));
+            TypeTag typeTag = rawTypeTagFor(field);
+            if (prefabValues.contains(typeTag.getType())) {
+                Object newValue = prefabValues.getOther(typeTag, field.get(object));
                 field.set(object, newValue);
             }
             else {
-                createPrefabValues(prefabValues, type);
-                Object newValue = prefabValues.getOther(type, field.get(object));
+                createPrefabValues(prefabValues, typeTag.getType());
+                Object newValue = prefabValues.getOther(typeTag, field.get(object));
                 field.set(object, newValue);
             }
+        }
+
+        /**
+         * Temporary code while transitioning to TypeTag.
+         */
+        private TypeTag rawTypeTagFor(Field f) {
+            TypeTag real = TypeTag.of(f);
+            Class<?> raw = real.getType();
+            if (raw.equals(TypeTag.GenericArray.class)) {
+                return new TypeTag(f.getType());
+            }
+            return new TypeTag(raw);
         }
     }
 }

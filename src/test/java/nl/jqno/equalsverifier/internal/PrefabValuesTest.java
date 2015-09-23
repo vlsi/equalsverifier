@@ -26,12 +26,14 @@ import org.junit.rules.ExpectedException;
 import static org.junit.Assert.*;
 
 public class PrefabValuesTest {
-    private static final Class<String> EXISTING_KEY = String.class;
+    private static final TypeTag EXISTING_KEY = new TypeTag(String.class);
+    private static final Class<String> EXISTING_KEY_OLD = String.class;
     private static final String EXISTING_RED_VALUE = "the red";
     private static final String EXISTING_BLACK_VALUE = "the black";
     private static final String NON_EXISTING_VALUE = "the unknown";
 
-    private static final Class<Object> NON_EXISTING_KEY = Object.class;
+    private static final TypeTag NON_EXISTING_KEY = new TypeTag(Object.class);
+    private static final Class<Object> NON_EXISTING_KEY_OLD = Object.class;
     private static final Object VALUE_FOR_NON_EXISTING_KEY = new Object();
 
     @Rule
@@ -44,7 +46,7 @@ public class PrefabValuesTest {
     public void setup() {
         stash = new MockStaticFieldValueStash();
         p = new PrefabValues(stash);
-        p.put(EXISTING_KEY, EXISTING_RED_VALUE, EXISTING_BLACK_VALUE);
+        p.put(EXISTING_KEY_OLD, EXISTING_RED_VALUE, EXISTING_BLACK_VALUE);
     }
 
     @Test
@@ -78,25 +80,25 @@ public class PrefabValuesTest {
 
     @Test
     public void contains() {
-        assertTrue(p.contains(EXISTING_KEY));
-        assertFalse(p.contains(NON_EXISTING_KEY));
+        assertTrue(p.contains(EXISTING_KEY_OLD));
+        assertFalse(p.contains(NON_EXISTING_KEY_OLD));
     }
 
     @Test
     public void getRed() {
-        assertEquals(EXISTING_RED_VALUE, p.getRed(EXISTING_KEY));
+        assertEquals(EXISTING_RED_VALUE, p.getRed(EXISTING_KEY_OLD));
     }
 
     @Test
     public void getBlack() {
-        assertEquals(EXISTING_BLACK_VALUE, p.getBlack(EXISTING_KEY));
+        assertEquals(EXISTING_BLACK_VALUE, p.getBlack(EXISTING_KEY_OLD));
     }
 
     @Test
     public void overwriteKey() {
-        p.put(EXISTING_KEY, "another red one", "another black one");
-        assertEquals("another red one", p.getRed(EXISTING_KEY));
-        assertEquals("another black one", p.getBlack(EXISTING_KEY));
+        p.put(EXISTING_KEY_OLD, "another red one", "another black one");
+        assertEquals("another red one", p.getRed(EXISTING_KEY_OLD));
+        assertEquals("another black one", p.getBlack(EXISTING_KEY_OLD));
     }
 
     @Test
@@ -135,29 +137,29 @@ public class PrefabValuesTest {
         thrown.expect(ReflectionException.class);
         thrown.expectMessage("Type does not match value.");
 
-        p.getOther(String.class, 1);
+        p.getOther(new TypeTag(String.class), 1);
     }
 
     @Test
     public void getOtherWhenValueIsPrimitive() {
         p.put(int.class, 1, 2);
-        assertEquals(2, p.getOther(int.class, 1));
+        assertEquals(2, p.getOther(new TypeTag(int.class), 1));
     }
 
     @Test
     public void getOtherWhenValueIsSubclassOfSpecifiedClass() {
         p.put(Interface.class, new Interface(){}, new Interface(){});
-        assertPrefabValues(p, Interface.class);
+        assertPrefabValues(p, new TypeTag(Interface.class));
     }
 
-    private static void assertPrefabValues(PrefabValues p, Class<?> type) {
-        Object red = p.getOther(type, null);
+    private static void assertPrefabValues(PrefabValues p, TypeTag typeTag) {
+        Object red = p.getOther(typeTag, null);
         assertNotNull(red);
 
-        Object black = p.getOther(type, red);
+        Object black = p.getOther(typeTag, red);
         assertNotNull(black);
 
         assertFalse(red.equals(black));
-        assertEquals(red, p.getOther(type, black));
+        assertEquals(red, p.getOther(typeTag, black));
     }
 }
