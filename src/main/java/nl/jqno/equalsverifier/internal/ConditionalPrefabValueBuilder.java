@@ -130,10 +130,10 @@ public final class ConditionalPrefabValueBuilder {
                         throw new EqualsVerifierBugException("No prefab values available for type " + c.getCanonicalName());
                     }
                     if (instances.size() == 0) {
-                        objects.add(prefabValues.getRed(c));
+                        objects.add(prefabValues.getRed(new TypeTag(c)));
                     }
                     else {
-                        objects.add(prefabValues.getBlack(c));
+                        objects.add(prefabValues.getBlack(new TypeTag(c)));
                     }
                 }
                 return ci.instantiate(paramTypes, objects.toArray());

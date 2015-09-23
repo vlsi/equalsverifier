@@ -18,6 +18,7 @@ package nl.jqno.equalsverifier;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.internal.ConditionalPrefabValueBuilder;
 import nl.jqno.equalsverifier.internal.PrefabValues;
+import nl.jqno.equalsverifier.internal.TypeTag;
 
 import javax.naming.Reference;
 import java.io.File;
@@ -197,17 +198,20 @@ public final class JavaApiPrefabValues {
     }
 
     private void addJavaFxClasses() {
+        TypeTag list = new TypeTag(List.class);
         ConditionalPrefabValueBuilder.of("javafx.collections.ObservableList")
-                .callFactory("javafx.collections.FXCollections", "observableList", classes(List.class), objects(prefabValues.getRed(List.class)))
-                .callFactory("javafx.collections.FXCollections", "observableList", classes(List.class), objects(prefabValues.getBlack(List.class)))
+                .callFactory("javafx.collections.FXCollections", "observableList", classes(List.class), objects(prefabValues.getRed(list)))
+                .callFactory("javafx.collections.FXCollections", "observableList", classes(List.class), objects(prefabValues.getBlack(list)))
                 .addTo(prefabValues);
+        TypeTag map = new TypeTag(Map.class);
         ConditionalPrefabValueBuilder.of("javafx.collections.ObservableMap")
-                .callFactory("javafx.collections.FXCollections", "observableMap", classes(Map.class), objects(prefabValues.getRed(Map.class)))
-                .callFactory("javafx.collections.FXCollections", "observableMap", classes(Map.class), objects(prefabValues.getBlack(Map.class)))
+                .callFactory("javafx.collections.FXCollections", "observableMap", classes(Map.class), objects(prefabValues.getRed(map)))
+                .callFactory("javafx.collections.FXCollections", "observableMap", classes(Map.class), objects(prefabValues.getBlack(map)))
                 .addTo(prefabValues);
+        TypeTag set = new TypeTag(Set.class);
         ConditionalPrefabValueBuilder.of("javafx.collections.ObservableSet")
-                .callFactory("javafx.collections.FXCollections", "observableSet", classes(Set.class), objects(prefabValues.getRed(Set.class)))
-                .callFactory("javafx.collections.FXCollections", "observableSet", classes(Set.class), objects(prefabValues.getBlack(Set.class)))
+                .callFactory("javafx.collections.FXCollections", "observableSet", classes(Set.class), objects(prefabValues.getRed(set)))
+                .callFactory("javafx.collections.FXCollections", "observableSet", classes(Set.class), objects(prefabValues.getBlack(set)))
                 .addTo(prefabValues);
         ConditionalPrefabValueBuilder.of("javafx.beans.property.BooleanProperty")
                 .withConcreteClass("javafx.beans.property.SimpleBooleanProperty")

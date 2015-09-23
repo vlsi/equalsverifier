@@ -34,6 +34,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 public class PrefabValuesCreatorTest {
+    private static final TypeTag POINT_TAG = new TypeTag(Point.class);
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -55,35 +56,35 @@ public class PrefabValuesCreatorTest {
     @Test
     public void simple() {
         prefabValues.putFor(Point.class);
-        Point red = prefabValues.getRed(Point.class);
-        Point black = prefabValues.getBlack(Point.class);
+        Point red = prefabValues.getRed(POINT_TAG);
+        Point black = prefabValues.getBlack(POINT_TAG);
         assertFalse(red.equals(black));
     }
 
     @Test
     public void createSecondTimeIsNoOp() {
         prefabValues.putFor(Point.class);
-        Point red = prefabValues.getRed(Point.class);
-        Point black = prefabValues.getBlack(Point.class);
+        Point red = prefabValues.getRed(POINT_TAG);
+        Point black = prefabValues.getBlack(POINT_TAG);
 
         prefabValues.putFor(Point.class);
 
-        assertSame(red, prefabValues.getRed(Point.class));
-        assertSame(black, prefabValues.getBlack(Point.class));
+        assertSame(red, prefabValues.getRed(POINT_TAG));
+        assertSame(black, prefabValues.getBlack(POINT_TAG));
     }
 
     @Test
     public void createEnum() {
         prefabValues.putFor(Enum.class);
-        assertNotNull(prefabValues.getRed(Enum.class));
-        assertNotNull(prefabValues.getBlack(Enum.class));
+        assertNotNull(prefabValues.getRed(new TypeTag(Enum.class)));
+        assertNotNull(prefabValues.getBlack(new TypeTag(Enum.class)));
     }
 
     @Test
     public void createOneElementEnum() {
         prefabValues.putFor(OneElementEnum.class);
-        assertNotNull(prefabValues.getRed(OneElementEnum.class));
-        assertNotNull(prefabValues.getBlack(OneElementEnum.class));
+        assertNotNull(prefabValues.getRed(new TypeTag(OneElementEnum.class)));
+        assertNotNull(prefabValues.getBlack(new TypeTag(OneElementEnum.class)));
     }
 
     @Test

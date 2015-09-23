@@ -86,19 +86,19 @@ public class PrefabValuesTest {
 
     @Test
     public void getRed() {
-        assertEquals(EXISTING_RED_VALUE, p.getRed(EXISTING_KEY_OLD));
+        assertEquals(EXISTING_RED_VALUE, p.getRed(EXISTING_KEY));
     }
 
     @Test
     public void getBlack() {
-        assertEquals(EXISTING_BLACK_VALUE, p.getBlack(EXISTING_KEY_OLD));
+        assertEquals(EXISTING_BLACK_VALUE, p.getBlack(EXISTING_KEY));
     }
 
     @Test
     public void overwriteKey() {
         p.put(EXISTING_KEY_OLD, "another red one", "another black one");
-        assertEquals("another red one", p.getRed(EXISTING_KEY_OLD));
-        assertEquals("another black one", p.getBlack(EXISTING_KEY_OLD));
+        assertEquals("another red one", p.getRed(EXISTING_KEY));
+        assertEquals("another black one", p.getBlack(EXISTING_KEY));
     }
 
     @Test

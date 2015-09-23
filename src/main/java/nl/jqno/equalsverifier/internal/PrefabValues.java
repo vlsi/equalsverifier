@@ -100,23 +100,25 @@ public class PrefabValues {
     /**
      * Getter for the "red" prefabricated value of the specified type.
      *
-     * @param type Class for which to return the prefabricated value.
+     * @param typeTag TypeTag for the class for which to return the
+     *          prefabricated value.
      * @return The "red" prefabricated value for the specified type.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getRed(Class<T> type) {
-        return (T)getTuple(new TypeTag(type)).red;
+    public <T> T getRed(TypeTag typeTag) {
+        return (T)getTuple(typeTag).red;
     }
 
     /**
      * Getter for the "black" prefabricated value of the specified type.
      *
-     * @param type Class for which to return the prefabricated value.
+     * @param typeTag TypeTag for the class for which to return the
+     *          prefabricated value.
      * @return The "black" prefabricated value for the specified type.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getBlack(Class<T> type) {
-        return (T)getTuple(new TypeTag(type)).black;
+    public <T> T getBlack(TypeTag typeTag) {
+        return (T)getTuple(typeTag).black;
     }
 
     @SuppressWarnings("unchecked")
@@ -229,9 +231,9 @@ public class PrefabValues {
         Class<?> componentType = type.getComponentType();
         putFor(componentType, typeStack);
         T red = (T)Array.newInstance(componentType, 1);
-        Array.set(red, 0, getRed(componentType));
+        Array.set(red, 0, getRed(new TypeTag(componentType)));
         T black = (T)Array.newInstance(componentType, 1);
-        Array.set(black, 0, getBlack(componentType));
+        Array.set(black, 0, getBlack(new TypeTag(componentType)));
         put(type, red, black);
     }
 
