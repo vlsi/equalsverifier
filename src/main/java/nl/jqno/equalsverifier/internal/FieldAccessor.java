@@ -271,7 +271,7 @@ public class FieldAccessor {
         @Override
         public void modify() throws IllegalAccessException {
             TypeTag typeTag = rawTypeTagFor(field);
-            if (prefabValues.contains(typeTag.getType())) {
+            if (prefabValues.contains(typeTag)) {
                 Object newValue = prefabValues.getOther(typeTag, field.get(object));
                 field.set(object, newValue);
             }

@@ -89,12 +89,12 @@ public class PrefabValues {
     /**
      * Tests whether prefabricated values exist for the specified class.
      *
-     * @param type Class whose presence in this {@link PrefabValues} is to be
-     *          tested.
+     * @param typeTag TypeTag for the Class whose presence in this
+     *          {@link PrefabValues} is to be tested.
      * @return True if prefabricated values exist for the specified class.
      */
-    public boolean contains(Class<?> type) {
-        return values.containsKey(new TypeTag(type));
+    public boolean contains(TypeTag typeTag) {
+        return values.containsKey(typeTag);
     }
 
     /**
@@ -208,7 +208,7 @@ public class PrefabValues {
     }
 
     private boolean noNeedToCreatePrefabValues(Class<?> type) {
-        return contains(type) || type.isPrimitive();
+        return contains(new TypeTag(type)) || type.isPrimitive();
     }
 
     private <T> void putEnumInstances(Class<T> type) {

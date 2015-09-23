@@ -126,14 +126,15 @@ public final class ConditionalPrefabValueBuilder {
             public Object get() {
                 List<Object> objects = new ArrayList<>();
                 for (Class<?> c : paramTypes) {
-                    if (!prefabValues.contains(c)) {
+                    TypeTag typeTag = new TypeTag(c);
+                    if (!prefabValues.contains(typeTag)) {
                         throw new EqualsVerifierBugException("No prefab values available for type " + c.getCanonicalName());
                     }
                     if (instances.size() == 0) {
-                        objects.add(prefabValues.getRed(new TypeTag(c)));
+                        objects.add(prefabValues.getRed(typeTag));
                     }
                     else {
-                        objects.add(prefabValues.getBlack(new TypeTag(c)));
+                        objects.add(prefabValues.getBlack(typeTag));
                     }
                 }
                 return ci.instantiate(paramTypes, objects.toArray());

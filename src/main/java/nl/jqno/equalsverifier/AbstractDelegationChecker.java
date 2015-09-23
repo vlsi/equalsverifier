@@ -119,16 +119,18 @@ class AbstractDelegationChecker<T> implements Checker {
 
     @SuppressWarnings("unchecked")
     private <S> S getRedPrefabValue(Class<?> c) {
-        if (prefabValues.contains(c)) {
-            return (S)prefabValues.getRed(new TypeTag(c));
+        TypeTag typeTag = new TypeTag(c);
+        if (prefabValues.contains(typeTag)) {
+            return (S)prefabValues.getRed(typeTag);
         }
         return null;
     }
 
     @SuppressWarnings("unchecked")
     private <S> S getBlackPrefabValue(Class<?> c) {
-        if (prefabValues.contains(c)) {
-            return (S)prefabValues.getBlack(new TypeTag(c));
+        TypeTag typeTag = new TypeTag(c);
+        if (prefabValues.contains(typeTag)) {
+            return (S)prefabValues.getBlack(typeTag);
         }
         return null;
     }

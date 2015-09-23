@@ -33,7 +33,6 @@ public class PrefabValuesTest {
     private static final String NON_EXISTING_VALUE = "the unknown";
 
     private static final TypeTag NON_EXISTING_KEY = new TypeTag(Object.class);
-    private static final Class<Object> NON_EXISTING_KEY_OLD = Object.class;
     private static final Object VALUE_FOR_NON_EXISTING_KEY = new Object();
 
     @Rule
@@ -80,8 +79,8 @@ public class PrefabValuesTest {
 
     @Test
     public void contains() {
-        assertTrue(p.contains(EXISTING_KEY_OLD));
-        assertFalse(p.contains(NON_EXISTING_KEY_OLD));
+        assertTrue(p.contains(EXISTING_KEY));
+        assertFalse(p.contains(NON_EXISTING_KEY));
     }
 
     @Test
