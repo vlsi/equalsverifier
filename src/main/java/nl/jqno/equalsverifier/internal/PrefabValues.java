@@ -67,12 +67,12 @@ public class PrefabValues {
      * collection of prefabricated values.
      *
      * @param <T> The type of value to put into this {@link PrefabValues}.
-     * @param type The class of the values.
+     * @param typeTag TypeTag for the class of the values.
      * @param red A value of type T.
      * @param black Another value of type T.
      */
-    public <T> void put(Class<T> type, T red, T black) {
-        values.put(new TypeTag(type), new Tuple<>(red, black));
+    public <T> void put(TypeTag typeTag, T red, T black) {
+        values.put(typeTag, new Tuple<>(red, black));
     }
 
     /**
@@ -218,10 +218,10 @@ public class PrefabValues {
             case 0:
                 throw new ReflectionException("Enum " + type.getSimpleName() + " has no elements");
             case 1:
-                put(type, enumConstants[0], enumConstants[0]);
+                put(new TypeTag(type), enumConstants[0], enumConstants[0]);
                 break;
             default:
-                put(type, enumConstants[0], enumConstants[1]);
+                put(new TypeTag(type), enumConstants[0], enumConstants[1]);
                 break;
         }
     }
@@ -234,7 +234,7 @@ public class PrefabValues {
         Array.set(red, 0, getRed(new TypeTag(componentType)));
         T black = (T)Array.newInstance(componentType, 1);
         Array.set(black, 0, getBlack(new TypeTag(componentType)));
-        put(type, red, black);
+        put(new TypeTag(type), red, black);
     }
 
     private void traverseFields(Class<?> type, LinkedHashSet<Class<?>> typeStack) {
@@ -251,7 +251,7 @@ public class PrefabValues {
         ClassAccessor<T> accessor = ClassAccessor.of(type, this, false);
         T red = accessor.getRedObject();
         T black = accessor.getBlackObject();
-        put(type, red, black);
+        put(new TypeTag(type), red, black);
     }
 
     private static Map<Class<?>, Class<?>> createPrimitiveObjectMapper() {

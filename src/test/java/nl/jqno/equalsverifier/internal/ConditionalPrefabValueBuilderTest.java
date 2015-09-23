@@ -105,7 +105,7 @@ public class ConditionalPrefabValueBuilderTest {
 
     @Test
     public void prefabValuesContainsInstances_whenPrefabValuesAreProvided() {
-        prefabValues.put(String.class, "red", "black");
+        prefabValues.put(new TypeTag(String.class), "red", "black");
 
         ConditionalPrefabValueBuilder.of(StringsContainer.class.getName())
                 .instantiate(classes(String.class, String.class), prefabValues)
@@ -129,7 +129,7 @@ public class ConditionalPrefabValueBuilderTest {
 
     @Test
     public void nothingHappens_whenTypeDoesNotExist_givenConstructorWithPrefabValues() {
-        prefabValues.put(String.class, "red", "black");
+        prefabValues.put(new TypeTag(String.class), "red", "black");
 
         ConditionalPrefabValueBuilder.of("this.type.does.not.exist")
                 .instantiate(classes(String.class, String.class), prefabValues)
@@ -140,7 +140,7 @@ public class ConditionalPrefabValueBuilderTest {
     }
     @Test
     public void nothingHappens_whenNonExistingConstructorOverloadIsCalled_givenPrefabValues() {
-        prefabValues.put(String.class, "red", "black");
+        prefabValues.put(new TypeTag(String.class), "red", "black");
 
         ConditionalPrefabValueBuilder.of(StringsContainer.class.getName())
                 .instantiate(classes(String.class, String.class), prefabValues)
@@ -152,7 +152,7 @@ public class ConditionalPrefabValueBuilderTest {
 
     @Test
     public void throwsBug_whenInstantiateIsCalledMoreThanTwice_givenPrefabValues() {
-        prefabValues.put(String.class, "red", "black");
+        prefabValues.put(new TypeTag(String.class), "red", "black");
 
         ConditionalPrefabValueBuilder builder = ConditionalPrefabValueBuilder.of(StringsContainer.class.getName())
                 .instantiate(classes(String.class, String.class), prefabValues)
@@ -375,7 +375,7 @@ public class ConditionalPrefabValueBuilderTest {
         public PrefabValuesThrowsWhenCalled() { super(null); }
 
         @Override
-        public <T> void put(Class<T> type, T red, T black) {
+        public <T> void put(TypeTag typeTag, T red, T black) {
             putIsCalled = true;
         }
 

@@ -399,7 +399,7 @@ public class FieldAccessorTest {
     @Test
     public void addPrefabValues() {
         PointContainer foo = new PointContainer(new Point(1, 2));
-        prefabValues.put(Point.class, RED_NEW_POINT, BLACK_NEW_POINT);
+        prefabValues.put(new TypeTag(Point.class), RED_NEW_POINT, BLACK_NEW_POINT);
 
         doChangeField(foo, "point");
         assertEquals(RED_NEW_POINT, foo.getPoint());
@@ -414,7 +414,7 @@ public class FieldAccessorTest {
     @Test
     public void addPrefabArrayValues() {
         PointArrayContainer foo = new PointArrayContainer();
-        prefabValues.put(Point.class, RED_NEW_POINT, BLACK_NEW_POINT);
+        prefabValues.put(new TypeTag(Point.class), RED_NEW_POINT, BLACK_NEW_POINT);
 
         doChangeField(foo, "points");
         assertEquals(RED_NEW_POINT, foo.points[0]);

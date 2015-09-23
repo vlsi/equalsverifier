@@ -17,20 +17,25 @@ package nl.jqno.equalsverifier.testhelpers;
 
 import nl.jqno.equalsverifier.internal.PrefabValues;
 import nl.jqno.equalsverifier.internal.StaticFieldValueStash;
+import nl.jqno.equalsverifier.internal.TypeTag;
 
 public final class PrefabValuesFactory {
     private PrefabValuesFactory() {}
 
     public static PrefabValues withPrimitives(StaticFieldValueStash stash) {
         PrefabValues result = new PrefabValues(stash);
-        result.put(boolean.class, true, false);
-        result.put(byte.class, (byte)1, (byte)2);
-        result.put(char.class, 'a', 'b');
-        result.put(double.class, 0.5D, 1.0D);
-        result.put(float.class, 0.5F, 1.0F);
-        result.put(int.class, 1, 2);
-        result.put(long.class, 1L, 2L);
-        result.put(short.class, (short)1, (short)2);
+        put(result, boolean.class, true, false);
+        put(result, byte.class, (byte)1, (byte)2);
+        put(result, char.class, 'a', 'b');
+        put(result, double.class, 0.5D, 1.0D);
+        put(result, float.class, 0.5F, 1.0F);
+        put(result, int.class, 1, 2);
+        put(result, long.class, 1L, 2L);
+        put(result, short.class, (short)1, (short)2);
         return result;
+    }
+
+    private static <T> void put(PrefabValues prefabValues, Class<T> type, T red, T black) {
+        prefabValues.put(new TypeTag(type), red, black);
     }
 }

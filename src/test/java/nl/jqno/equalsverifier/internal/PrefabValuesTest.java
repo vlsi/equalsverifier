@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 
 public class PrefabValuesTest {
     private static final TypeTag EXISTING_KEY = new TypeTag(String.class);
-    private static final Class<String> EXISTING_KEY_OLD = String.class;
     private static final String EXISTING_RED_VALUE = "the red";
     private static final String EXISTING_BLACK_VALUE = "the black";
     private static final String NON_EXISTING_VALUE = "the unknown";
@@ -45,7 +44,7 @@ public class PrefabValuesTest {
     public void setup() {
         stash = new MockStaticFieldValueStash();
         p = new PrefabValues(stash);
-        p.put(EXISTING_KEY_OLD, EXISTING_RED_VALUE, EXISTING_BLACK_VALUE);
+        p.put(EXISTING_KEY, EXISTING_RED_VALUE, EXISTING_BLACK_VALUE);
     }
 
     @Test
@@ -67,7 +66,7 @@ public class PrefabValuesTest {
 
     @Test
     public void putEqualValuesIsAllowedForSingletonFields() {
-        p.put(String.class, "a", "a");
+        p.put(new TypeTag(String.class), "a", "a");
     }
 
     @Test
@@ -95,7 +94,7 @@ public class PrefabValuesTest {
 
     @Test
     public void overwriteKey() {
-        p.put(EXISTING_KEY_OLD, "another red one", "another black one");
+        p.put(EXISTING_KEY, "another red one", "another black one");
         assertEquals("another red one", p.getRed(EXISTING_KEY));
         assertEquals("another black one", p.getBlack(EXISTING_KEY));
     }
@@ -141,14 +140,16 @@ public class PrefabValuesTest {
 
     @Test
     public void getOtherWhenValueIsPrimitive() {
-        p.put(int.class, 1, 2);
-        assertEquals(2, p.getOther(new TypeTag(int.class), 1));
+        TypeTag typeTag = new TypeTag(int.class);
+        p.put(typeTag, 1, 2);
+        assertEquals(2, p.getOther(typeTag, 1));
     }
 
     @Test
     public void getOtherWhenValueIsSubclassOfSpecifiedClass() {
-        p.put(Interface.class, new Interface(){}, new Interface(){});
-        assertPrefabValues(p, new TypeTag(Interface.class));
+        TypeTag typeTag = new TypeTag(Interface.class);
+        p.put(typeTag, new Interface(){}, new Interface(){});
+        assertPrefabValues(p, typeTag);
     }
 
     private static void assertPrefabValues(PrefabValues p, TypeTag typeTag) {

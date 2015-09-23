@@ -100,7 +100,7 @@ public class ObjectAccessorScramblingTest {
 
     @Test
     public void scramblePrivateFinalPoint() {
-        prefabValues.put(Point.class, new Point(1, 2), new Point(2, 3));
+        prefabValues.put(new TypeTag(Point.class), new Point(1, 2), new Point(2, 3));
         FinalAssignedPointContainer foo = new FinalAssignedPointContainer();
         Point before = foo.p;
 

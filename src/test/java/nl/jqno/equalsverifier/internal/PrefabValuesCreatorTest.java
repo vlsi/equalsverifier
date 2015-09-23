@@ -96,7 +96,7 @@ public class PrefabValuesCreatorTest {
 
     @Test
     public void oneStepRecursiveType() {
-        prefabValues.put(Node.class, new Node(), new Node());
+        prefabValues.put(new TypeTag(Node.class), new Node(), new Node());
         prefabValues.putFor(Node.class);
     }
 
@@ -108,7 +108,7 @@ public class PrefabValuesCreatorTest {
 
     @Test
     public void oneStepRecursiveArrayType() {
-        prefabValues.put(NodeArray.class, new NodeArray(), new NodeArray());
+        prefabValues.put(new TypeTag(NodeArray.class), new NodeArray(), new NodeArray());
         prefabValues.putFor(NodeArray.class);
     }
 
@@ -120,7 +120,7 @@ public class PrefabValuesCreatorTest {
 
     @Test
     public void addTwoStepRecursiveType() {
-        prefabValues.put(TwoStepNodeB.class, new TwoStepNodeB(), new TwoStepNodeB());
+        prefabValues.put(new TypeTag(TwoStepNodeB.class), new TwoStepNodeB(), new TwoStepNodeB());
         prefabValues.putFor(TwoStepNodeA.class);
     }
 
@@ -132,7 +132,7 @@ public class PrefabValuesCreatorTest {
 
     @Test
     public void twoStepRecursiveArrayType() {
-        prefabValues.put(TwoStepNodeArrayB.class, new TwoStepNodeArrayB(), new TwoStepNodeArrayB());
+        prefabValues.put(new TypeTag(TwoStepNodeArrayB.class), new TwoStepNodeArrayB(), new TwoStepNodeArrayB());
         prefabValues.putFor(TwoStepNodeArrayA.class);
     }
 

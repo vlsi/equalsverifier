@@ -77,47 +77,47 @@ public final class JavaApiPrefabValues {
     }
 
     private void addPrimitiveClasses() {
-        prefabValues.put(boolean.class, true, false);
-        prefabValues.put(byte.class, (byte)1, (byte)2);
-        prefabValues.put(char.class, 'a', 'b');
-        prefabValues.put(double.class, 0.5D, 1.0D);
-        prefabValues.put(float.class, 0.5F, 1.0F);
-        prefabValues.put(int.class, 1, 2);
-        prefabValues.put(long.class, 1L, 2L);
-        prefabValues.put(short.class, (short)1, (short)2);
+        put(boolean.class, true, false);
+        put(byte.class, (byte)1, (byte)2);
+        put(char.class, 'a', 'b');
+        put(double.class, 0.5D, 1.0D);
+        put(float.class, 0.5F, 1.0F);
+        put(int.class, 1, 2);
+        put(long.class, 1L, 2L);
+        put(short.class, (short)1, (short)2);
 
-        prefabValues.put(Boolean.class, true, false);
-        prefabValues.put(Byte.class, (byte)1, (byte)2);
-        prefabValues.put(Character.class, 'a', 'b');
-        prefabValues.put(Double.class, 0.5D, 1.0D);
-        prefabValues.put(Float.class, 0.5F, 1.0F);
-        prefabValues.put(Integer.class, 1, 2);
-        prefabValues.put(Long.class, 1L, 2L);
-        prefabValues.put(Short.class, (short)1, (short)2);
+        put(Boolean.class, true, false);
+        put(Byte.class, (byte)1, (byte)2);
+        put(Character.class, 'a', 'b');
+        put(Double.class, 0.5D, 1.0D);
+        put(Float.class, 0.5F, 1.0F);
+        put(Integer.class, 1, 2);
+        put(Long.class, 1L, 2L);
+        put(Short.class, (short)1, (short)2);
 
-        prefabValues.put(Object.class, new Object(), new Object());
-        prefabValues.put(Class.class, Class.class, Object.class);
-        prefabValues.put(String.class, "one", "two");
+        put(Object.class, new Object(), new Object());
+        put(Class.class, Class.class, Object.class);
+        put(String.class, "one", "two");
     }
 
     @SuppressFBWarnings(value = "DMI_HARDCODED_ABSOLUTE_FILENAME", justification = "Just need an instance, not for actual use.")
     private void addClasses() {
-        prefabValues.put(BigDecimal.class, BigDecimal.ZERO, BigDecimal.ONE);
-        prefabValues.put(BigInteger.class, BigInteger.ZERO, BigInteger.ONE);
-        prefabValues.put(Calendar.class, new GregorianCalendar(2010, 7, 4), new GregorianCalendar(2010, 7, 5));
-        prefabValues.put(Date.class, new Date(0), new Date(1));
-        prefabValues.put(DateFormat.class, DateFormat.getTimeInstance(), DateFormat.getDateInstance());
-        prefabValues.put(File.class, new File(""), new File("/"));
-        prefabValues.put(Formatter.class, new Formatter(), new Formatter());
-        prefabValues.put(GregorianCalendar.class, new GregorianCalendar(2010, 7, 4), new GregorianCalendar(2010, 7, 5));
-        prefabValues.put(Locale.class, new Locale("nl"), new Locale("hu"));
-        prefabValues.put(Pattern.class, Pattern.compile("one"), Pattern.compile("two"));
-        prefabValues.put(Reference.class, new Reference("one"), new Reference("two"));
-        prefabValues.put(SimpleDateFormat.class, new SimpleDateFormat("yMd"), new SimpleDateFormat("dMy"));
-        prefabValues.put(Scanner.class, new Scanner("one"), new Scanner("two"));
-        prefabValues.put(TimeZone.class, TimeZone.getTimeZone("GMT+1"), TimeZone.getTimeZone("GMT+2"));
-        prefabValues.put(Throwable.class, new Throwable(), new Throwable());
-        prefabValues.put(UUID.class, new UUID(0, -1), new UUID(1, 0));
+        put(BigDecimal.class, BigDecimal.ZERO, BigDecimal.ONE);
+        put(BigInteger.class, BigInteger.ZERO, BigInteger.ONE);
+        put(Calendar.class, new GregorianCalendar(2010, 7, 4), new GregorianCalendar(2010, 7, 5));
+        put(Date.class, new Date(0), new Date(1));
+        put(DateFormat.class, DateFormat.getTimeInstance(), DateFormat.getDateInstance());
+        put(File.class, new File(""), new File("/"));
+        put(Formatter.class, new Formatter(), new Formatter());
+        put(GregorianCalendar.class, new GregorianCalendar(2010, 7, 4), new GregorianCalendar(2010, 7, 5));
+        put(Locale.class, new Locale("nl"), new Locale("hu"));
+        put(Pattern.class, Pattern.compile("one"), Pattern.compile("two"));
+        put(Reference.class, new Reference("one"), new Reference("two"));
+        put(SimpleDateFormat.class, new SimpleDateFormat("yMd"), new SimpleDateFormat("dMy"));
+        put(Scanner.class, new Scanner("one"), new Scanner("two"));
+        put(TimeZone.class, TimeZone.getTimeZone("GMT+1"), TimeZone.getTimeZone("GMT+2"));
+        put(Throwable.class, new Throwable(), new Throwable());
+        put(UUID.class, new UUID(0, -1), new UUID(1, 0));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -139,7 +139,7 @@ public final class JavaApiPrefabValues {
         addMapToPrefabValues(SortedMap.class, new TreeMap(), new TreeMap());
         addMapToPrefabValues(NavigableMap.class, new TreeMap(), new TreeMap());
         addMapToPrefabValues(ConcurrentNavigableMap.class, new ConcurrentSkipListMap(), new ConcurrentSkipListMap());
-        prefabValues.put(EnumMap.class, Dummy.RED.map(), Dummy.BLACK.map());
+        put(EnumMap.class, Dummy.RED.map(), Dummy.BLACK.map());
         addMapToPrefabValues(ConcurrentHashMap.class, new ConcurrentHashMap(), new ConcurrentHashMap());
         addMapToPrefabValues(HashMap.class, new HashMap(), new HashMap());
         addMapToPrefabValues(Hashtable.class, new Hashtable(), new Hashtable());
@@ -156,26 +156,26 @@ public final class JavaApiPrefabValues {
         addCollectionToPrefabValues(NavigableSet.class, new TreeSet(), new TreeSet());
         addCollectionToPrefabValues(CopyOnWriteArraySet.class, new CopyOnWriteArraySet(), new CopyOnWriteArraySet());
         addCollectionToPrefabValues(TreeSet.class, new TreeSet(), new TreeSet());
-        prefabValues.put(EnumSet.class, EnumSet.of(Dummy.RED), EnumSet.of(Dummy.BLACK));
+        put(EnumSet.class, EnumSet.of(Dummy.RED), EnumSet.of(Dummy.BLACK));
 
         BitSet redBitSet = new BitSet();
         BitSet blackBitSet = new BitSet();
         blackBitSet.set(0);
-        prefabValues.put(BitSet.class, redBitSet, blackBitSet);
+        put(BitSet.class, redBitSet, blackBitSet);
     }
 
     @SuppressWarnings("rawtypes")
     private void addQueues() {
-        prefabValues.put(Queue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
-        prefabValues.put(BlockingQueue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
-        prefabValues.put(Deque.class, new ArrayDeque(1), new ArrayDeque(1));
-        prefabValues.put(BlockingDeque.class, new LinkedBlockingDeque(1), new LinkedBlockingDeque(1));
-        prefabValues.put(ArrayBlockingQueue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
-        prefabValues.put(ConcurrentLinkedQueue.class, new ConcurrentLinkedQueue(), new ConcurrentLinkedQueue());
-        prefabValues.put(DelayQueue.class, new DelayQueue(), new DelayQueue());
-        prefabValues.put(LinkedBlockingQueue.class, new LinkedBlockingQueue(), new LinkedBlockingQueue());
-        prefabValues.put(PriorityBlockingQueue.class, new PriorityBlockingQueue(), new PriorityBlockingQueue());
-        prefabValues.put(SynchronousQueue.class, new SynchronousQueue(), new SynchronousQueue());
+        put(Queue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
+        put(BlockingQueue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
+        put(Deque.class, new ArrayDeque(1), new ArrayDeque(1));
+        put(BlockingDeque.class, new LinkedBlockingDeque(1), new LinkedBlockingDeque(1));
+        put(ArrayBlockingQueue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
+        put(ConcurrentLinkedQueue.class, new ConcurrentLinkedQueue(), new ConcurrentLinkedQueue());
+        put(DelayQueue.class, new DelayQueue(), new DelayQueue());
+        put(LinkedBlockingQueue.class, new LinkedBlockingQueue(), new LinkedBlockingQueue());
+        put(PriorityBlockingQueue.class, new PriorityBlockingQueue(), new PriorityBlockingQueue());
+        put(SynchronousQueue.class, new SynchronousQueue(), new SynchronousQueue());
     }
 
     private void addJava8ApiClasses() {
@@ -358,16 +358,20 @@ public final class JavaApiPrefabValues {
                 .addTo(prefabValues);
     }
 
+    private <T> void put(Class<T> type, T red, T black) {
+        prefabValues.put(new TypeTag(type), red, black);
+    }
+
     private <T extends Collection<Object>> void addCollectionToPrefabValues(Class<T> type, T red, T black) {
         red.add("red");
         black.add("black");
-        prefabValues.put(type, red, black);
+        put(type, red, black);
     }
 
     private <T extends Map<Object, Object>> void addMapToPrefabValues(Class<T> type, T red, T black) {
         red.put("red_key", "red_value");
         black.put("black_key", "black_value");
-        prefabValues.put(type, red, black);
+        put(type, red, black);
     }
 
     private enum Dummy {
