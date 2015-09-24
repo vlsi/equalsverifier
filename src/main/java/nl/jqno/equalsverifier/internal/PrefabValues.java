@@ -183,62 +183,65 @@ public class PrefabValues {
     }
 
     private void putFor(Class<?> type, LinkedHashSet<TypeTag> typeStack) {
-        if (noNeedToCreatePrefabValues(type)) {
+        TypeTag typeTag = new TypeTag(type);
+
+        if (noNeedToCreatePrefabValues(typeTag)) {
             return;
         }
-        if (typeStack.contains(new TypeTag(type))) {
+        if (typeStack.contains(typeTag)) {
             throw new RecursionException(typeStack);
         }
 
         stash.backup(type);
         @SuppressWarnings("unchecked")
         LinkedHashSet<TypeTag> clone = (LinkedHashSet<TypeTag>)typeStack.clone();
-        clone.add(new TypeTag(type));
+        clone.add(typeTag);
 
         if (type.isEnum()) {
-            putEnumInstances(type);
+            putEnumInstances(typeTag);
         }
         else if (type.isArray()) {
-            putArrayInstances(type, clone);
+            putArrayInstances(typeTag, clone);
         }
         else {
-            traverseFields(type, clone);
-            createAndPutInstances(type);
+            traverseFields(typeTag, clone);
+            createAndPutInstances(typeTag);
         }
     }
 
-    private boolean noNeedToCreatePrefabValues(Class<?> type) {
-        return contains(new TypeTag(type)) || type.isPrimitive();
+    private boolean noNeedToCreatePrefabValues(TypeTag typeTag) {
+        return contains(typeTag) || typeTag.getType().isPrimitive();
     }
 
-    private <T> void putEnumInstances(Class<T> type) {
-        T[] enumConstants = type.getEnumConstants();
+    private void putEnumInstances(TypeTag typeTag) {
+        Object[] enumConstants = typeTag.getType().getEnumConstants();
 
         switch (enumConstants.length) {
             case 0:
-                throw new ReflectionException("Enum " + type.getSimpleName() + " has no elements");
+                throw new ReflectionException("Enum " + typeTag.getType().getSimpleName() + " has no elements");
             case 1:
-                put(new TypeTag(type), enumConstants[0], enumConstants[0]);
+                put(typeTag, enumConstants[0], enumConstants[0]);
                 break;
             default:
-                put(new TypeTag(type), enumConstants[0], enumConstants[1]);
+                put(typeTag, enumConstants[0], enumConstants[1]);
                 break;
         }
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void putArrayInstances(Class<T> type, LinkedHashSet<TypeTag> typeStack) {
-        Class<?> componentType = type.getComponentType();
+    private void putArrayInstances(TypeTag typeTag, LinkedHashSet<TypeTag> typeStack) {
+        Class<?> componentType = typeTag.getType().getComponentType();
+        TypeTag componentTypeTag = new TypeTag(componentType);
         putFor(componentType, typeStack);
-        T red = (T)Array.newInstance(componentType, 1);
-        Array.set(red, 0, getRed(new TypeTag(componentType)));
-        T black = (T)Array.newInstance(componentType, 1);
-        Array.set(black, 0, getBlack(new TypeTag(componentType)));
-        put(new TypeTag(type), red, black);
+        Object red = Array.newInstance(componentType, 1);
+        Array.set(red, 0, getRed(componentTypeTag));
+        Object black = Array.newInstance(componentType, 1);
+        Array.set(black, 0, getBlack(componentTypeTag));
+        put(typeTag, red, black);
     }
 
-    private void traverseFields(Class<?> type, LinkedHashSet<TypeTag> typeStack) {
-        for (Field field : FieldIterable.of(type)) {
+    private void traverseFields(TypeTag typeTag, LinkedHashSet<TypeTag> typeStack) {
+        for (Field field : FieldIterable.of(typeTag.getType())) {
             int modifiers = field.getModifiers();
             boolean isStaticAndFinal = Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers);
             if (!isStaticAndFinal) {
@@ -247,11 +250,11 @@ public class PrefabValues {
         }
     }
 
-    private <T> void createAndPutInstances(Class<T> type) {
-        ClassAccessor<T> accessor = ClassAccessor.of(type, this, false);
-        T red = accessor.getRedObject();
-        T black = accessor.getBlackObject();
-        put(new TypeTag(type), red, black);
+    private void createAndPutInstances(TypeTag typeTag) {
+        ClassAccessor<?> accessor = ClassAccessor.of(typeTag.getType(), this, false);
+        Object red = accessor.getRedObject();
+        Object black = accessor.getBlackObject();
+        put(typeTag, red, black);
     }
 
     private static Map<Class<?>, Class<?>> createPrimitiveObjectMapper() {
