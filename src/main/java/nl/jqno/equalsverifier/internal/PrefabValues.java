@@ -175,15 +175,15 @@ public class PrefabValues {
      * Both created instances are guaranteed not to be equal to each other,
      * but are not guaranteed to be non-null. However, nulls will be very rare.
      *
-     * @param type The type to create prefabValues for.
+     * @param typeTag TypeTag for the type to create prefabValues for.
      * @throws RecursionException If recursion is detected.
      */
-    public void putFor(Class<?> type) {
-        putFor(type, new LinkedHashSet<TypeTag>());
+    public void putFor(TypeTag typeTag) {
+        putFor(typeTag, new LinkedHashSet<TypeTag>());
     }
 
-    private void putFor(Class<?> type, LinkedHashSet<TypeTag> typeStack) {
-        TypeTag typeTag = new TypeTag(type);
+    private void putFor(TypeTag typeTag, LinkedHashSet<TypeTag> typeStack) {
+        Class<?> type = typeTag.getType();
 
         if (noNeedToCreatePrefabValues(typeTag)) {
             return;
@@ -232,7 +232,7 @@ public class PrefabValues {
     private void putArrayInstances(TypeTag typeTag, LinkedHashSet<TypeTag> typeStack) {
         Class<?> componentType = typeTag.getType().getComponentType();
         TypeTag componentTypeTag = new TypeTag(componentType);
-        putFor(componentType, typeStack);
+        putFor(componentTypeTag, typeStack);
         Object red = Array.newInstance(componentType, 1);
         Array.set(red, 0, getRed(componentTypeTag));
         Object black = Array.newInstance(componentType, 1);
@@ -245,7 +245,7 @@ public class PrefabValues {
             int modifiers = field.getModifiers();
             boolean isStaticAndFinal = Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers);
             if (!isStaticAndFinal) {
-                putFor(field.getType(), typeStack);
+                putFor(TypeTag.rawTypeTagFor(field), typeStack);
             }
         }
     }

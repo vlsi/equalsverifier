@@ -49,13 +49,13 @@ public class PrefabValuesCreatorTest {
 
     @Test
     public void stashed() {
-        prefabValues.putFor(Point.class);
+        prefabValues.putFor(POINT_TAG);
         assertEquals(Point.class, stash.lastBackuppedType);
     }
 
     @Test
     public void simple() {
-        prefabValues.putFor(Point.class);
+        prefabValues.putFor(POINT_TAG);
         Point red = prefabValues.getRed(POINT_TAG);
         Point black = prefabValues.getBlack(POINT_TAG);
         assertFalse(red.equals(black));
@@ -63,11 +63,11 @@ public class PrefabValuesCreatorTest {
 
     @Test
     public void createSecondTimeIsNoOp() {
-        prefabValues.putFor(Point.class);
+        prefabValues.putFor(POINT_TAG);
         Point red = prefabValues.getRed(POINT_TAG);
         Point black = prefabValues.getBlack(POINT_TAG);
 
-        prefabValues.putFor(Point.class);
+        prefabValues.putFor(POINT_TAG);
 
         assertSame(red, prefabValues.getRed(POINT_TAG));
         assertSame(black, prefabValues.getBlack(POINT_TAG));
@@ -75,95 +75,99 @@ public class PrefabValuesCreatorTest {
 
     @Test
     public void createEnum() {
-        prefabValues.putFor(Enum.class);
-        assertNotNull(prefabValues.getRed(new TypeTag(Enum.class)));
-        assertNotNull(prefabValues.getBlack(new TypeTag(Enum.class)));
+        TypeTag typeTag = new TypeTag(Enum.class);
+        prefabValues.putFor(typeTag);
+        assertNotNull(prefabValues.getRed(typeTag));
+        assertNotNull(prefabValues.getBlack(typeTag));
     }
 
     @Test
     public void createOneElementEnum() {
-        prefabValues.putFor(OneElementEnum.class);
-        assertNotNull(prefabValues.getRed(new TypeTag(OneElementEnum.class)));
-        assertNotNull(prefabValues.getBlack(new TypeTag(OneElementEnum.class)));
+        TypeTag typeTag = new TypeTag(OneElementEnum.class);
+        prefabValues.putFor(typeTag);
+        assertNotNull(prefabValues.getRed(typeTag));
+        assertNotNull(prefabValues.getBlack(typeTag));
     }
 
     @Test
     public void createEmptyEnum() {
         thrown.expect(ReflectionException.class);
         thrown.expectMessage("Enum EmptyEnum has no elements");
-        prefabValues.putFor(EmptyEnum.class);
+        prefabValues.putFor(new TypeTag(EmptyEnum.class));
     }
 
     @Test
     public void oneStepRecursiveType() {
-        prefabValues.put(new TypeTag(Node.class), new Node(), new Node());
-        prefabValues.putFor(Node.class);
+        TypeTag typeTag = new TypeTag(Node.class);
+        prefabValues.put(typeTag, new Node(), new Node());
+        prefabValues.putFor(typeTag);
     }
 
     @Test
     public void dontAddOneStepRecursiveType() {
         thrown.expect(RecursionException.class);
-        prefabValues.putFor(Node.class);
+        prefabValues.putFor(new TypeTag(Node.class));
     }
 
     @Test
     public void oneStepRecursiveArrayType() {
-        prefabValues.put(new TypeTag(NodeArray.class), new NodeArray(), new NodeArray());
-        prefabValues.putFor(NodeArray.class);
+        TypeTag typeTag = new TypeTag(NodeArray.class);
+        prefabValues.put(typeTag, new NodeArray(), new NodeArray());
+        prefabValues.putFor(typeTag);
     }
 
     @Test
     public void dontAddOneStepRecursiveArrayType() {
         thrown.expect(RecursionException.class);
-        prefabValues.putFor(NodeArray.class);
+        prefabValues.putFor(new TypeTag(NodeArray.class));
     }
 
     @Test
     public void addTwoStepRecursiveType() {
         prefabValues.put(new TypeTag(TwoStepNodeB.class), new TwoStepNodeB(), new TwoStepNodeB());
-        prefabValues.putFor(TwoStepNodeA.class);
+        prefabValues.putFor(new TypeTag(TwoStepNodeA.class));
     }
 
     @Test
     public void dontAddTwoStepRecursiveType() {
         thrown.expect(RecursionException.class);
-        prefabValues.putFor(TwoStepNodeA.class);
+        prefabValues.putFor(new TypeTag(TwoStepNodeA.class));
     }
 
     @Test
     public void twoStepRecursiveArrayType() {
         prefabValues.put(new TypeTag(TwoStepNodeArrayB.class), new TwoStepNodeArrayB(), new TwoStepNodeArrayB());
-        prefabValues.putFor(TwoStepNodeArrayA.class);
+        prefabValues.putFor(new TypeTag(TwoStepNodeArrayA.class));
     }
 
     @Test
     public void dontAddTwoStepRecursiveArrayType() {
         thrown.expect(RecursionException.class);
-        prefabValues.putFor(TwoStepNodeArrayA.class);
+        prefabValues.putFor(new TypeTag(TwoStepNodeArrayA.class));
     }
 
     @Test
     public void sameClassTwiceButNoRecursion() {
-        prefabValues.putFor(NotRecursiveA.class);
+        prefabValues.putFor(new TypeTag(NotRecursiveA.class));
     }
 
     @Test
     public void recursiveWithAnotherFieldFirst() {
         thrown.expectMessage(containsString(RecursiveWithAnotherFieldFirst.class.getSimpleName()));
         thrown.expectMessage(not(containsString(RecursiveThisIsTheOtherField.class.getSimpleName())));
-        prefabValues.putFor(RecursiveWithAnotherFieldFirst.class);
+        prefabValues.putFor(new TypeTag(RecursiveWithAnotherFieldFirst.class));
     }
 
     @Test
     public void exceptionMessage() {
         thrown.expectMessage(TwoStepNodeA.class.getSimpleName());
         thrown.expectMessage(TwoStepNodeB.class.getSimpleName());
-        prefabValues.putFor(TwoStepNodeA.class);
+        prefabValues.putFor(new TypeTag(TwoStepNodeA.class));
     }
 
     @Test
     public void skipStaticFinal() {
-        prefabValues.putFor(StaticFinalContainer.class);
+        prefabValues.putFor(new TypeTag(StaticFinalContainer.class));
     }
 
     static class StaticFinalContainer {

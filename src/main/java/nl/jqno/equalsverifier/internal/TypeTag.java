@@ -61,6 +61,18 @@ public final class TypeTag {
         return resolve(field.getGenericType());
     }
 
+    /**
+     * Temporary code while transitioning to TypeTag.
+     */
+    public static TypeTag rawTypeTagFor(Field f) {
+        TypeTag real = TypeTag.of(f);
+        Class<?> raw = real.getType();
+        if (raw.equals(TypeTag.GenericArray.class)) {
+            return new TypeTag(f.getType());
+        }
+        return new TypeTag(raw);
+    }
+
     private static TypeTag resolve(Type type) {
         List<TypeTag> nestedTags = new ArrayList<>();
         if (type instanceof Class) {

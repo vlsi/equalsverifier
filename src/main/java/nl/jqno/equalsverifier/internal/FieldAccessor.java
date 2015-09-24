@@ -193,8 +193,8 @@ public class FieldAccessor {
         return true;
     }
 
-    private static void createPrefabValues(PrefabValues prefabValues, Class<?> type) {
-        prefabValues.putFor(type);
+    private static void createPrefabValues(PrefabValues prefabValues, TypeTag typeTag) {
+        prefabValues.putFor(typeTag);
     }
 
     private interface FieldModifier {
@@ -270,28 +270,16 @@ public class FieldAccessor {
 
         @Override
         public void modify() throws IllegalAccessException {
-            TypeTag typeTag = rawTypeTagFor(field);
+            TypeTag typeTag = TypeTag.rawTypeTagFor(field);
             if (prefabValues.contains(typeTag)) {
                 Object newValue = prefabValues.getOther(typeTag, field.get(object));
                 field.set(object, newValue);
             }
             else {
-                createPrefabValues(prefabValues, typeTag.getType());
+                createPrefabValues(prefabValues, typeTag);
                 Object newValue = prefabValues.getOther(typeTag, field.get(object));
                 field.set(object, newValue);
             }
-        }
-
-        /**
-         * Temporary code while transitioning to TypeTag.
-         */
-        private TypeTag rawTypeTagFor(Field f) {
-            TypeTag real = TypeTag.of(f);
-            Class<?> raw = real.getType();
-            if (raw.equals(TypeTag.GenericArray.class)) {
-                return new TypeTag(f.getType());
-            }
-            return new TypeTag(raw);
         }
     }
 }
