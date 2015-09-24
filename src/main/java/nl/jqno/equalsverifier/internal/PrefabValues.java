@@ -179,21 +179,21 @@ public class PrefabValues {
      * @throws RecursionException If recursion is detected.
      */
     public void putFor(Class<?> type) {
-        putFor(type, new LinkedHashSet<Class<?>>());
+        putFor(type, new LinkedHashSet<TypeTag>());
     }
 
-    private void putFor(Class<?> type, LinkedHashSet<Class<?>> typeStack) {
+    private void putFor(Class<?> type, LinkedHashSet<TypeTag> typeStack) {
         if (noNeedToCreatePrefabValues(type)) {
             return;
         }
-        if (typeStack.contains(type)) {
+        if (typeStack.contains(new TypeTag(type))) {
             throw new RecursionException(typeStack);
         }
 
         stash.backup(type);
         @SuppressWarnings("unchecked")
-        LinkedHashSet<Class<?>> clone = (LinkedHashSet<Class<?>>)typeStack.clone();
-        clone.add(type);
+        LinkedHashSet<TypeTag> clone = (LinkedHashSet<TypeTag>)typeStack.clone();
+        clone.add(new TypeTag(type));
 
         if (type.isEnum()) {
             putEnumInstances(type);
@@ -227,7 +227,7 @@ public class PrefabValues {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void putArrayInstances(Class<T> type, LinkedHashSet<Class<?>> typeStack) {
+    private <T> void putArrayInstances(Class<T> type, LinkedHashSet<TypeTag> typeStack) {
         Class<?> componentType = type.getComponentType();
         putFor(componentType, typeStack);
         T red = (T)Array.newInstance(componentType, 1);
@@ -237,7 +237,7 @@ public class PrefabValues {
         put(new TypeTag(type), red, black);
     }
 
-    private void traverseFields(Class<?> type, LinkedHashSet<Class<?>> typeStack) {
+    private void traverseFields(Class<?> type, LinkedHashSet<TypeTag> typeStack) {
         for (Field field : FieldIterable.of(type)) {
             int modifiers = field.getModifiers();
             boolean isStaticAndFinal = Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers);

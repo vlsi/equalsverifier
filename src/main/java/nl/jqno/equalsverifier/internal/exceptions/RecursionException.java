@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jan Ouwens
+ * Copyright 2010, 2015 Jan Ouwens
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package nl.jqno.equalsverifier.internal.exceptions;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import nl.jqno.equalsverifier.internal.TypeTag;
+
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -26,8 +29,9 @@ import java.util.LinkedHashSet;
  * @author Jan Ouwens
  */
 @SuppressWarnings("serial")
+@SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "EqualsVerifier does not serialize.")
 public class RecursionException extends InternalException {
-    private final LinkedHashSet<Class<?>> typeStack;
+    private final LinkedHashSet<TypeTag> typeStack;
 
     /**
      * Constructor.
@@ -35,7 +39,7 @@ public class RecursionException extends InternalException {
      * @param typeStack A collection of types that have been encountered prior
      *          to detecting the recursion.
      */
-    public RecursionException(LinkedHashSet<Class<?>> typeStack) {
+    public RecursionException(LinkedHashSet<TypeTag> typeStack) {
         super();
         this.typeStack = typeStack;
     }
@@ -47,11 +51,11 @@ public class RecursionException extends InternalException {
     public String getMessage() {
         StringBuilder sb = new StringBuilder();
         sb.append("Recursive datastructure.\nAdd prefab values for one of the following types: ");
-        Iterator<Class<?>> i = typeStack.iterator();
-        sb.append(i.next().getName());
+        Iterator<TypeTag> i = typeStack.iterator();
+        sb.append(i.next().getType().getName());
         while(i.hasNext()) {
             sb.append(", ");
-            sb.append(i.next().getName());
+            sb.append(i.next().getType().getName());
         }
         sb.append(".");
         return sb.toString();
