@@ -47,11 +47,11 @@ public class PrefabValues {
     /**
      * Backs up the values of all static member fields of the given type.
      *
-     * @param type The type for which to store the values of static member
-     *          fields.
+     * @param typeTag TypeTag for the type for which to store the values of
+     *          static member fields.
      */
-    public void backupToStash(Class<?> type) {
-        stash.backup(type);
+    public void backupToStash(TypeTag typeTag) {
+        stash.backup(typeTag);
     }
 
     /**
@@ -183,8 +183,6 @@ public class PrefabValues {
     }
 
     private void putFor(TypeTag typeTag, LinkedHashSet<TypeTag> typeStack) {
-        Class<?> type = typeTag.getType();
-
         if (noNeedToCreatePrefabValues(typeTag)) {
             return;
         }
@@ -192,10 +190,12 @@ public class PrefabValues {
             throw new RecursionException(typeStack);
         }
 
-        stash.backup(type);
+        stash.backup(typeTag);
         @SuppressWarnings("unchecked")
         LinkedHashSet<TypeTag> clone = (LinkedHashSet<TypeTag>)typeStack.clone();
         clone.add(typeTag);
+
+        Class<?> type = typeTag.getType();
 
         if (type.isEnum()) {
             putEnumInstances(typeTag);

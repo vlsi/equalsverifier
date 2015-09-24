@@ -16,15 +16,16 @@
 package nl.jqno.equalsverifier.testhelpers;
 
 import nl.jqno.equalsverifier.internal.StaticFieldValueStash;
+import nl.jqno.equalsverifier.internal.TypeTag;
 
 public class MockStaticFieldValueStash extends StaticFieldValueStash {
-    public Class<?> lastBackuppedType = null;
+    public TypeTag lastBackuppedType = null;
     public boolean restoreCalled = false;
 
     @Override
-    public void backup(Class<?> type) {
-        lastBackuppedType = type;
-        super.backup(type);
+    public void backup(TypeTag typeTag) {
+        lastBackuppedType = typeTag;
+        super.backup(typeTag);
     }
 
     @Override

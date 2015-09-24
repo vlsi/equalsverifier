@@ -54,8 +54,9 @@ public class PrefabValuesTest {
 
     @Test
     public void backupDelegatesToStash() {
-        p.backupToStash(String.class);
-        assertEquals(String.class, stash.lastBackuppedType);
+        TypeTag typeTag = new TypeTag(String.class);
+        p.backupToStash(typeTag);
+        assertEquals(typeTag, stash.lastBackuppedType);
     }
 
     @Test

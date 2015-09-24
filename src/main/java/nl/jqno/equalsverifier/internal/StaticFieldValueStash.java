@@ -25,24 +25,25 @@ import java.util.Map;
  * @author Jan Ouwens
  */
 public class StaticFieldValueStash {
-    private final Map<Class<?>, Map<Field, Object>> stash = new HashMap<>();
+    private final Map<TypeTag, Map<Field, Object>> stash = new HashMap<>();
 
     /**
      * Stores the values of all static members fields of the given type.
      *
-     * @param type The type for which to store the values of its static fields.
+     * @param typeTag TypeTag for the type for which to store the values of its
+     *          static fields.
      */
-    public void backup(Class<?> type) {
-        if (stash.containsKey(type)) {
+    public void backup(TypeTag typeTag) {
+        if (stash.containsKey(typeTag)) {
             return;
         }
 
-        stash.put(type, new HashMap<Field, Object>());
-        ObjectAccessor<?> objectAccessor = ObjectAccessor.of(null, type);
-        for (Field field : FieldIterable.of(type)) {
+        stash.put(typeTag, new HashMap<Field, Object>());
+        ObjectAccessor<?> objectAccessor = ObjectAccessor.of(null, typeTag.getType());
+        for (Field field : FieldIterable.of(typeTag.getType())) {
             FieldAccessor accessor = objectAccessor.fieldAccessorFor(field);
             if (accessor.fieldIsStatic()) {
-                stash.get(type).put(field, accessor.get());
+                stash.get(typeTag).put(field, accessor.get());
             }
         }
     }
@@ -52,8 +53,8 @@ public class StaticFieldValueStash {
      * for which they were stored at once.
      */
     public void restoreAll() {
-        for (Map.Entry<Class<?>, Map<Field, Object>> entry : stash.entrySet()) {
-            Class<?> type = entry.getKey();
+        for (Map.Entry<TypeTag, Map<Field, Object>> entry : stash.entrySet()) {
+            Class<?> type = entry.getKey().getType();
             ObjectAccessor<?> objectAccessor = ObjectAccessor.of(null, type);
             for (Field field : FieldIterable.of(type)) {
                 FieldAccessor accessor = objectAccessor.fieldAccessorFor(field);

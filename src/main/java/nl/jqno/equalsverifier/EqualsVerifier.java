@@ -359,7 +359,7 @@ public final class EqualsVerifier<T> {
     public void verify() {
         PrefabValues prefabValues = config.getPrefabValues();
         try {
-            prefabValues.backupToStash(config.getType());
+            prefabValues.backupToStash(new TypeTag(config.getType()));
             performVerification();
         }
         catch (InternalException e) {

@@ -50,7 +50,7 @@ public class PrefabValuesCreatorTest {
     @Test
     public void stashed() {
         prefabValues.putFor(POINT_TAG);
-        assertEquals(Point.class, stash.lastBackuppedType);
+        assertEquals(POINT_TAG, stash.lastBackuppedType);
     }
 
     @Test
