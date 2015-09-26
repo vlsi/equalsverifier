@@ -15,6 +15,7 @@
  */
 package nl.jqno.equalsverifier.internal;
 
+import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.exceptions.ReflectionException;
 import nl.jqno.equalsverifier.testhelpers.MockStaticFieldValueStash;
 import nl.jqno.equalsverifier.testhelpers.types.TypeHelper.Interface;
@@ -22,6 +23,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -153,6 +157,32 @@ public class PrefabValuesTest {
         assertPrefabValues(p, typeTag);
     }
 
+    @Test
+    public void getSingleRedFromFactory() {
+        p.addFactory(List.class, new StubListPrefabValueFactory());
+
+        TypeTag typeTag = new TypeTag(List.class, new TypeTag(String.class));
+        p.putFor(typeTag);
+        List<String> actual = p.getRed(typeTag);
+        assertEquals(actual.get(0), p.getRed(EXISTING_KEY));
+    }
+
+    @Test
+    public void getTwoRedsFromFactory() {
+        p.put(new TypeTag(Integer.class), 1, 2);
+        p.addFactory(List.class, new StubListPrefabValueFactory());
+
+        TypeTag stringTypeTag = new TypeTag(List.class, new TypeTag(String.class));
+        p.putFor(stringTypeTag);
+        TypeTag intTypeTag = new TypeTag(List.class, new TypeTag(Integer.class));
+        p.putFor(intTypeTag);
+
+        List<String> stringActual = p.getRed(stringTypeTag);
+        assertEquals(stringActual.get(0), p.getRed(EXISTING_KEY));
+        List<Integer> intActual = p.getRed(intTypeTag);
+        assertEquals(intActual.get(0), p.getRed(new TypeTag(Integer.class)));
+    }
+
     private static void assertPrefabValues(PrefabValues p, TypeTag typeTag) {
         Object red = p.getOther(typeTag, null);
         assertNotNull(red);
@@ -162,5 +192,12 @@ public class PrefabValuesTest {
 
         assertFalse(red.equals(black));
         assertEquals(red, p.getOther(typeTag, black));
+    }
+
+    private static class StubListPrefabValueFactory extends CollectionPrefabValueFactory<List> {
+        @Override
+        public List createEmpty() {
+            return new ArrayList();
+        }
     }
 }

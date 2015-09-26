@@ -35,6 +35,7 @@ public class PrefabValues {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_OBJECT_MAPPER = createPrimitiveObjectMapper();
     private final StaticFieldValueStash stash;
     private final Map<TypeTag, Tuple<?>> values = new HashMap<>();
+    private final Map<Class<?>, GenericPrefabValueFactory<?>> factories = new HashMap<>();
 
     public PrefabValues() {
         this(new StaticFieldValueStash());
@@ -60,6 +61,10 @@ public class PrefabValues {
      */
     public void restoreFromStash() {
         stash.restoreAll();
+    }
+
+    public <T> void addFactory(Class<T> type, GenericPrefabValueFactory<T> factory) {
+        factories.put(type, factory);
     }
 
     /**
@@ -197,7 +202,10 @@ public class PrefabValues {
 
         Class<?> type = typeTag.getType();
 
-        if (type.isEnum()) {
+        if (factories.containsKey(type)) {
+            putGenericInstances(factories.get(type), typeTag);
+        }
+        else if (type.isEnum()) {
             putEnumInstances(typeTag);
         }
         else if (type.isArray()) {
@@ -211,6 +219,15 @@ public class PrefabValues {
 
     private boolean noNeedToCreatePrefabValues(TypeTag typeTag) {
         return contains(typeTag) || typeTag.getType().isPrimitive();
+    }
+
+    private void putGenericInstances(GenericPrefabValueFactory<?> factory, TypeTag typeTag) {
+        for (TypeTag inner : typeTag.getGenericTypes()) {
+            putFor(inner);
+        }
+        Object red = factory.createRed(typeTag, this);
+        Object black = factory.createBlack(typeTag, this);
+        put(typeTag, red, black);
     }
 
     private void putEnumInstances(TypeTag typeTag) {
