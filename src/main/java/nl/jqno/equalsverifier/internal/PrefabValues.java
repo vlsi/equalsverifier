@@ -144,7 +144,7 @@ public class PrefabValues {
             throw new ReflectionException("Type does not match value.");
         }
 
-        Tuple<?> tuple = values.get(typeTag);
+        Tuple<?> tuple = getTuple(typeTag);
         if (tuple == null) {
             throw new ReflectionException("No prefab values for " + type + " exist.");
         }
