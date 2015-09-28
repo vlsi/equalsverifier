@@ -25,17 +25,16 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("unchecked")
 public class GenericPrefabValueFactoryTest {
     private static final TypeTag STRING_TYPETAG = new TypeTag(String.class);
-
     private static final TypeTag STRINGLIST_TYPETAG = new TypeTag(List.class, STRING_TYPETAG);
-    private static final GenericPrefabValueFactory<List<String>> STRINGLIST_FACTORY = new StubListPrefabValueFactory();
-
     private static final TypeTag STRINGSET_TYPETAG = new TypeTag(Set.class, STRING_TYPETAG);
-    private static final GenericPrefabValueFactory<Set<String>> STRINGSET_FACTORY = new StubSetPrefabValueFactory();
-
     private static final TypeTag STRINGSTRINGMAP_TYPETAG = new TypeTag(Map.class, STRING_TYPETAG, STRING_TYPETAG);
-    private static final GenericPrefabValueFactory<Map<String, String>> STRINGSTRINGMAP_FACTORY = new StubMapPrefabValueFactory();
+
+    private static final GenericPrefabValueFactory<List> LIST_FACTORY = new StubListPrefabValueFactory();
+    private static final GenericPrefabValueFactory<Set> SET_FACTORY = new StubSetPrefabValueFactory();
+    private static final GenericPrefabValueFactory<Map> MAP_FACTORY = new StubMapPrefabValueFactory();
 
     private final PrefabValues prefabValues = new PrefabValues();
     private String red;
@@ -53,7 +52,7 @@ public class GenericPrefabValueFactoryTest {
         List<String> expected = new ArrayList<>();
         expected.add(red);
 
-        List<String> actual = STRINGLIST_FACTORY.createRed(STRINGLIST_TYPETAG, prefabValues);
+        List<String> actual = LIST_FACTORY.createRed(STRINGLIST_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 
@@ -62,7 +61,7 @@ public class GenericPrefabValueFactoryTest {
         List<String> expected = new ArrayList<>();
         expected.add(black);
 
-        List<String> actual = STRINGLIST_FACTORY.createBlack(STRINGLIST_TYPETAG, prefabValues);
+        List<String> actual = LIST_FACTORY.createBlack(STRINGLIST_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 
@@ -71,7 +70,7 @@ public class GenericPrefabValueFactoryTest {
         Set<String> expected = new HashSet<>();
         expected.add(red);
 
-        Set<String> actual = STRINGSET_FACTORY.createRed(STRINGSET_TYPETAG, prefabValues);
+        Set<String> actual = SET_FACTORY.createRed(STRINGSET_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 
@@ -80,7 +79,7 @@ public class GenericPrefabValueFactoryTest {
         Set<String> expected = new HashSet<>();
         expected.add(black);
 
-        Set<String> actual = STRINGSET_FACTORY.createBlack(STRINGSET_TYPETAG, prefabValues);
+        Set<String> actual = SET_FACTORY.createBlack(STRINGSET_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 
@@ -89,7 +88,7 @@ public class GenericPrefabValueFactoryTest {
         Map<String, String> expected = new HashMap<>();
         expected.put(red, red);
 
-        Map<String, String> actual = STRINGSTRINGMAP_FACTORY.createRed(STRINGSTRINGMAP_TYPETAG, prefabValues);
+        Map<String, String> actual = MAP_FACTORY.createRed(STRINGSTRINGMAP_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 
@@ -98,27 +97,27 @@ public class GenericPrefabValueFactoryTest {
         Map<String, String> expected = new HashMap<>();
         expected.put(black, black);
 
-        Map<String, String> actual = STRINGSTRINGMAP_FACTORY.createBlack(STRINGSTRINGMAP_TYPETAG, prefabValues);
+        Map<String, String> actual = MAP_FACTORY.createBlack(STRINGSTRINGMAP_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 
-    private static class StubListPrefabValueFactory extends CollectionPrefabValueFactory<List<String>> {
+    private static class StubListPrefabValueFactory extends CollectionPrefabValueFactory<List> {
         @Override
-        public List<String> createEmpty() {
+        public List createEmpty() {
             return new ArrayList<>();
         }
     }
 
-    private static class StubSetPrefabValueFactory extends CollectionPrefabValueFactory<Set<String>> {
+    private static class StubSetPrefabValueFactory extends CollectionPrefabValueFactory<Set> {
         @Override
-        public Set<String> createEmpty() {
+        public Set createEmpty() {
             return new HashSet<>();
         }
     }
 
-    private static class StubMapPrefabValueFactory extends MapPrefabValueFactory<Map<String, String>> {
+    private static class StubMapPrefabValueFactory extends MapPrefabValueFactory<Map> {
         @Override
-        public Map<String, String> createEmpty() {
+        public Map createEmpty() {
             return new HashMap<>();
         }
     }
