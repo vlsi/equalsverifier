@@ -58,6 +58,7 @@ public interface GenericPrefabValueFactory<T> {
      *
      * @param <T> The type of the Collection itself.
      */
+    @SuppressWarnings("unchecked")
     public abstract class CollectionPrefabValueFactory<T extends Collection> implements GenericPrefabValueFactory<T> {
         @Override
         public T createRed(TypeTag typeTag, PrefabValues prefabValues) {
@@ -83,6 +84,7 @@ public interface GenericPrefabValueFactory<T> {
      *
      * @param <T> The type of the Map itself.
      */
+    @SuppressWarnings("unchecked")
     public abstract class MapPrefabValueFactory<T extends Map> implements GenericPrefabValueFactory<T> {
         @Override
         public T createRed(TypeTag typeTag, PrefabValues prefabValues) {
