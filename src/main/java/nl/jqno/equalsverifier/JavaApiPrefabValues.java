@@ -123,7 +123,9 @@ public final class JavaApiPrefabValues {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addCollection() {
-        addCollectionToPrefabValues(Collection.class, new ArrayList(), new ArrayList());
+        prefabValues.addFactory(Collection.class, new CollectionPrefabValueFactory<Collection>() {
+            @Override public Collection createEmpty() { return new ArrayList(); }
+        });
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
