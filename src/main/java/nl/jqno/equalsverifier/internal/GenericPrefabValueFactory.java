@@ -16,6 +16,7 @@
 package nl.jqno.equalsverifier.internal;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,10 +53,18 @@ public abstract class GenericPrefabValueFactory<T> {
     public abstract T createBlack(TypeTag typeTag, PrefabValues prefabValues);
 
     protected TypeTag determineActualTypeTagFor(int n, TypeTag typeTag) {
-        TypeTag innerTag = typeTag.getGenericTypes().get(n);
-        if (innerTag.getType().equals(TypeTag.Wildcard.class)) {
-            return new TypeTag(Object.class);
+        TypeTag objectTypeTag = new TypeTag(Object.class);
+
+        List<TypeTag> genericTypes = typeTag.getGenericTypes();
+        if (genericTypes.size() <= n) {
+            return objectTypeTag;
         }
+
+        TypeTag innerTag = genericTypes.get(n);
+        if (innerTag.getType().equals(TypeTag.Wildcard.class)) {
+            return objectTypeTag;
+        }
+
         return innerTag;
     }
 

@@ -36,6 +36,8 @@ public class GenericPrefabValueFactoryTest {
     private static final TypeTag WILDCARD_TYPETAG = new TypeTag(Wildcard.class);
     private static final TypeTag WILDCARDLIST_TYPETAG = new TypeTag(List.class, WILDCARD_TYPETAG);
     private static final TypeTag WILDCARDMAP_TYPETAG = new TypeTag(Map.class, WILDCARD_TYPETAG, WILDCARD_TYPETAG);
+    private static final TypeTag RAWLIST_TYPETAG = new TypeTag(List.class);
+    private static final TypeTag RAWMAP_TYPETAG = new TypeTag(Map.class);
 
     private static final GenericPrefabValueFactory<List> LIST_FACTORY = new StubListPrefabValueFactory();
     private static final GenericPrefabValueFactory<Set> SET_FACTORY = new StubSetPrefabValueFactory();
@@ -44,12 +46,16 @@ public class GenericPrefabValueFactoryTest {
     private final PrefabValues prefabValues = new PrefabValues();
     private String red;
     private String black;
+    private Object redObject;
+    private Object blackObject;
 
     @Before
     public void setUp() {
         JavaApiPrefabValues.addTo(prefabValues);
         red = prefabValues.getRed(STRING_TYPETAG);
         black = prefabValues.getBlack(STRING_TYPETAG);
+        redObject = prefabValues.getRed(OBJECT_TYPETAG);
+        blackObject = prefabValues.getBlack(OBJECT_TYPETAG);
     }
 
     @Test
@@ -109,7 +115,7 @@ public class GenericPrefabValueFactoryTest {
     @Test
     public void createRedListOfWildcard() {
         List<Object> objects = new ArrayList<>();
-        objects.add(prefabValues.getRed(OBJECT_TYPETAG));
+        objects.add(redObject);
         List<?> expected = objects;
 
         List<?> actual = LIST_FACTORY.createRed(WILDCARDLIST_TYPETAG, prefabValues);
@@ -119,7 +125,7 @@ public class GenericPrefabValueFactoryTest {
     @Test
     public void createBlackListOfWildcard() {
         List<Object> objects = new ArrayList<>();
-        objects.add(prefabValues.getBlack(OBJECT_TYPETAG));
+        objects.add(blackObject);
         List<?> expected = objects;
 
         List<?> actual = LIST_FACTORY.createBlack(WILDCARDLIST_TYPETAG, prefabValues);
@@ -127,10 +133,27 @@ public class GenericPrefabValueFactoryTest {
     }
 
     @Test
+    public void createRedRawList() {
+        List expected = new ArrayList<>();
+        expected.add(redObject);
+
+        List actual = LIST_FACTORY.createRed(RAWLIST_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createBlackRawList() {
+        List expected = new ArrayList<>();
+        expected.add(blackObject);
+
+        List actual = LIST_FACTORY.createBlack(RAWLIST_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void createRedMapOfWildcard() {
         Map<Object, Object> objects = new HashMap<>();
-        Object object = prefabValues.getRed(OBJECT_TYPETAG);
-        objects.put(object, object);
+        objects.put(redObject, redObject);
         Map<?, ?> expected = objects;
 
         Map<?, ?> actual = MAP_FACTORY.createRed(WILDCARDMAP_TYPETAG, prefabValues);
@@ -140,11 +163,28 @@ public class GenericPrefabValueFactoryTest {
     @Test
     public void createBlackMapOfWildcard() {
         Map<Object, Object> objects = new HashMap<>();
-        Object object = prefabValues.getBlack(OBJECT_TYPETAG);
-        objects.put(object, object);
+        objects.put(blackObject, blackObject);
         Map<?, ?> expected = objects;
 
         Map<?, ?> actual = MAP_FACTORY.createBlack(WILDCARDMAP_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createRedRawMap() {
+        Map expected = new HashMap<>();
+        expected.put(redObject, redObject);
+
+        Map actual = MAP_FACTORY.createRed(RAWMAP_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createBlackRawMap() {
+        Map expected = new HashMap<>();
+        expected.put(blackObject, blackObject);
+
+        Map actual = MAP_FACTORY.createBlack(RAWMAP_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 
