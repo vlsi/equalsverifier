@@ -18,6 +18,7 @@ package nl.jqno.equalsverifier.internal;
 import nl.jqno.equalsverifier.JavaApiPrefabValues;
 import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.MapPrefabValueFactory;
+import nl.jqno.equalsverifier.internal.TypeTag.Wildcard;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,6 +32,10 @@ public class GenericPrefabValueFactoryTest {
     private static final TypeTag STRINGLIST_TYPETAG = new TypeTag(List.class, STRING_TYPETAG);
     private static final TypeTag STRINGSET_TYPETAG = new TypeTag(Set.class, STRING_TYPETAG);
     private static final TypeTag STRINGSTRINGMAP_TYPETAG = new TypeTag(Map.class, STRING_TYPETAG, STRING_TYPETAG);
+    private static final TypeTag OBJECT_TYPETAG = new TypeTag(Object.class);
+    private static final TypeTag WILDCARD_TYPETAG = new TypeTag(Wildcard.class);
+    private static final TypeTag WILDCARDLIST_TYPETAG = new TypeTag(List.class, WILDCARD_TYPETAG);
+    private static final TypeTag WILDCARDMAP_TYPETAG = new TypeTag(Map.class, WILDCARD_TYPETAG, WILDCARD_TYPETAG);
 
     private static final GenericPrefabValueFactory<List> LIST_FACTORY = new StubListPrefabValueFactory();
     private static final GenericPrefabValueFactory<Set> SET_FACTORY = new StubSetPrefabValueFactory();
@@ -98,6 +103,48 @@ public class GenericPrefabValueFactoryTest {
         expected.put(black, black);
 
         Map<String, String> actual = MAP_FACTORY.createBlack(STRINGSTRINGMAP_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createRedListOfWildcard() {
+        List<Object> objects = new ArrayList<>();
+        objects.add(prefabValues.getRed(OBJECT_TYPETAG));
+        List<?> expected = objects;
+
+        List<?> actual = LIST_FACTORY.createRed(WILDCARDLIST_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createBlackListOfWildcard() {
+        List<Object> objects = new ArrayList<>();
+        objects.add(prefabValues.getBlack(OBJECT_TYPETAG));
+        List<?> expected = objects;
+
+        List<?> actual = LIST_FACTORY.createBlack(WILDCARDLIST_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createRedMapOfWildcard() {
+        Map<Object, Object> objects = new HashMap<>();
+        Object object = prefabValues.getRed(OBJECT_TYPETAG);
+        objects.put(object, object);
+        Map<?, ?> expected = objects;
+
+        Map<?, ?> actual = MAP_FACTORY.createRed(WILDCARDMAP_TYPETAG, prefabValues);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void createBlackMapOfWildcard() {
+        Map<Object, Object> objects = new HashMap<>();
+        Object object = prefabValues.getBlack(OBJECT_TYPETAG);
+        objects.put(object, object);
+        Map<?, ?> expected = objects;
+
+        Map<?, ?> actual = MAP_FACTORY.createBlack(WILDCARDMAP_TYPETAG, prefabValues);
         assertEquals(expected, actual);
     }
 

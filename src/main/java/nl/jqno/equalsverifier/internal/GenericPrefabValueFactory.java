@@ -23,13 +23,13 @@ import java.util.Map;
  *
  * @param <T> The type to instantiate.
  */
-public interface GenericPrefabValueFactory<T> {
+public abstract class GenericPrefabValueFactory<T> {
     /**
      * Returns an empty instance of T, to be filled in by
      * {@link #createRed(TypeTag, PrefabValues)} and
      * {@link #createBlack(TypeTag, PrefabValues)}.
      */
-    public T createEmpty();
+    public abstract T createEmpty();
 
     /**
      * Calls {@link #createEmpty()} and fills it in with "red" values for use
@@ -39,7 +39,7 @@ public interface GenericPrefabValueFactory<T> {
      * @param prefabValues From which to draw object instances.
      * @return A "red" instance of {@link T}.
      */
-    public T createRed(TypeTag typeTag, PrefabValues prefabValues);
+    public abstract T createRed(TypeTag typeTag, PrefabValues prefabValues);
 
     /**
      * Calls {@link #createEmpty()} and fills it in with "black" values for use
@@ -49,7 +49,15 @@ public interface GenericPrefabValueFactory<T> {
      * @param prefabValues From which to draw object instances.
      * @return A "black" instance of {@link T}.
      */
-    public T createBlack(TypeTag typeTag, PrefabValues prefabValues);
+    public abstract T createBlack(TypeTag typeTag, PrefabValues prefabValues);
+
+    protected TypeTag determineActualTypeTagFor(int n, TypeTag typeTag) {
+        TypeTag innerTag = typeTag.getGenericTypes().get(n);
+        if (innerTag.getType().equals(TypeTag.Wildcard.class)) {
+            return new TypeTag(Object.class);
+        }
+        return innerTag;
+    }
 
     /**
      * Can create instances of {@link Collection}.
@@ -59,11 +67,11 @@ public interface GenericPrefabValueFactory<T> {
      * @param <T> The type of the Collection itself.
      */
     @SuppressWarnings("unchecked")
-    public abstract class CollectionPrefabValueFactory<T extends Collection> implements GenericPrefabValueFactory<T> {
+    public abstract static class CollectionPrefabValueFactory<T extends Collection> extends GenericPrefabValueFactory<T> {
         @Override
         public T createRed(TypeTag typeTag, PrefabValues prefabValues) {
             T result = createEmpty();
-            Object entry = prefabValues.getRed(typeTag.getGenericTypes().get(0));
+            final Object entry = prefabValues.getRed(determineActualTypeTagFor(0, typeTag));
             result.add(entry);
             return result;
         }
@@ -71,7 +79,7 @@ public interface GenericPrefabValueFactory<T> {
         @Override
         public T createBlack(TypeTag typeTag, PrefabValues prefabValues) {
             T result = createEmpty();
-            Object entry = prefabValues.getBlack(typeTag.getGenericTypes().get(0));
+            Object entry = prefabValues.getBlack(determineActualTypeTagFor(0, typeTag));
             result.add(entry);
             return result;
         }
@@ -85,12 +93,12 @@ public interface GenericPrefabValueFactory<T> {
      * @param <T> The type of the Map itself.
      */
     @SuppressWarnings("unchecked")
-    public abstract class MapPrefabValueFactory<T extends Map> implements GenericPrefabValueFactory<T> {
+    public abstract static class MapPrefabValueFactory<T extends Map> extends GenericPrefabValueFactory<T> {
         @Override
         public T createRed(TypeTag typeTag, PrefabValues prefabValues) {
             T result = createEmpty();
-            Object key = prefabValues.getRed(typeTag.getGenericTypes().get(0));
-            Object value = prefabValues.getRed(typeTag.getGenericTypes().get(1));
+            Object key = prefabValues.getRed(determineActualTypeTagFor(0, typeTag));
+            Object value = prefabValues.getRed(determineActualTypeTagFor(1, typeTag));
             result.put(key, value);
             return result;
         }
@@ -98,8 +106,8 @@ public interface GenericPrefabValueFactory<T> {
         @Override
         public T createBlack(TypeTag typeTag, PrefabValues prefabValues) {
             T result = createEmpty();
-            Object key = prefabValues.getBlack(typeTag.getGenericTypes().get(0));
-            Object value = prefabValues.getBlack(typeTag.getGenericTypes().get(1));
+            Object key = prefabValues.getBlack(determineActualTypeTagFor(0, typeTag));
+            Object value = prefabValues.getBlack(determineActualTypeTagFor(1, typeTag));
             result.put(key, value);
             return result;
         }
