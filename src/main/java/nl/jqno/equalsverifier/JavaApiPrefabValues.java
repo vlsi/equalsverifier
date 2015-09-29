@@ -18,6 +18,7 @@ package nl.jqno.equalsverifier;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.internal.ConditionalPrefabValueBuilder;
 import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefabValueFactory;
+import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.MapPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.PrefabValues;
 import nl.jqno.equalsverifier.internal.TypeTag;
 
@@ -43,6 +44,10 @@ import static nl.jqno.equalsverifier.internal.ConditionalInstantiator.*;
  * @author Jan Ouwens
  */
 public final class JavaApiPrefabValues {
+    private static final Comparator<Object> OBJECT_COMPARATOR = new Comparator<Object>() {
+        @Override public int compare(Object o1, Object o2) { return Integer.compare(o1.hashCode(), o2.hashCode()); }
+    };
+
     private PrefabValues prefabValues;
 
     /**
@@ -149,18 +154,43 @@ public final class JavaApiPrefabValues {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addMaps() {
+        // Add a raw map, as well as a factory, so we already have a Map instance to use when adding JavaFX classes.
         addMapToPrefabValues(Map.class, new HashMap(), new HashMap());
-        addMapToPrefabValues(SortedMap.class, new TreeMap(), new TreeMap());
-        addMapToPrefabValues(NavigableMap.class, new TreeMap(), new TreeMap());
-        addMapToPrefabValues(ConcurrentNavigableMap.class, new ConcurrentSkipListMap(), new ConcurrentSkipListMap());
+        prefabValues.addFactory(Map.class, new MapPrefabValueFactory<Map>() {
+            @Override public Map createEmpty() { return new HashMap(); }
+        });
+
+        prefabValues.addFactory(SortedMap.class, new MapPrefabValueFactory<SortedMap>() {
+            @Override public SortedMap createEmpty() { return new TreeMap(OBJECT_COMPARATOR); }
+        });
+        prefabValues.addFactory(NavigableMap.class, new MapPrefabValueFactory<NavigableMap>() {
+            @Override public NavigableMap createEmpty() { return new TreeMap(OBJECT_COMPARATOR); }
+        });
+        prefabValues.addFactory(ConcurrentNavigableMap.class, new MapPrefabValueFactory<ConcurrentNavigableMap>() {
+            @Override public ConcurrentNavigableMap createEmpty() { return new ConcurrentSkipListMap(OBJECT_COMPARATOR); }
+        });
+        prefabValues.addFactory(ConcurrentHashMap.class, new MapPrefabValueFactory<ConcurrentHashMap>() {
+            @Override public ConcurrentHashMap createEmpty() { return new ConcurrentHashMap(); }
+        });
+        prefabValues.addFactory(HashMap.class, new MapPrefabValueFactory<HashMap>() {
+            @Override public HashMap createEmpty() { return new HashMap(); }
+        });
+        prefabValues.addFactory(Hashtable.class, new MapPrefabValueFactory<Hashtable>() {
+            @Override public Hashtable createEmpty() { return new Hashtable(); }
+        });
+        prefabValues.addFactory(LinkedHashMap.class, new MapPrefabValueFactory<LinkedHashMap>() {
+            @Override public LinkedHashMap createEmpty() { return new LinkedHashMap(); }
+        });
+        prefabValues.addFactory(Properties.class, new MapPrefabValueFactory<Properties>() {
+            @Override public Properties createEmpty() { return new Properties(); }
+        });
+        prefabValues.addFactory(TreeMap.class, new MapPrefabValueFactory<TreeMap>() {
+            @Override public TreeMap createEmpty() { return new TreeMap(OBJECT_COMPARATOR); }
+        });
+        prefabValues.addFactory(WeakHashMap.class, new MapPrefabValueFactory<WeakHashMap>() {
+            @Override public WeakHashMap createEmpty() { return new WeakHashMap(); }
+        });
         put(EnumMap.class, Dummy.RED.map(), Dummy.BLACK.map());
-        addMapToPrefabValues(ConcurrentHashMap.class, new ConcurrentHashMap(), new ConcurrentHashMap());
-        addMapToPrefabValues(HashMap.class, new HashMap(), new HashMap());
-        addMapToPrefabValues(Hashtable.class, new Hashtable(), new Hashtable());
-        addMapToPrefabValues(LinkedHashMap.class, new LinkedHashMap(), new LinkedHashMap());
-        addMapToPrefabValues(Properties.class, new Properties(), new Properties());
-        addMapToPrefabValues(TreeMap.class, new TreeMap(), new TreeMap());
-        addMapToPrefabValues(WeakHashMap.class, new WeakHashMap(), new WeakHashMap());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

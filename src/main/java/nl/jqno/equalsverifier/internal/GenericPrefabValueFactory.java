@@ -106,8 +106,10 @@ public abstract class GenericPrefabValueFactory<T> {
         @Override
         public T createRed(TypeTag typeTag, PrefabValues prefabValues) {
             T result = createEmpty();
+            // Use red for key and black for value to avoid having identical keys and values.
+            // But don't do it in the Black map, or they may cancel each other out again.
             Object key = prefabValues.getRed(determineActualTypeTagFor(0, typeTag));
-            Object value = prefabValues.getRed(determineActualTypeTagFor(1, typeTag));
+            Object value = prefabValues.getBlack(determineActualTypeTagFor(1, typeTag));
             result.put(key, value);
             return result;
         }

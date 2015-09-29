@@ -97,7 +97,7 @@ public class GenericPrefabValueFactoryTest {
     @Test
     public void createRedMapOfStringToString() {
         Map<String, String> expected = new HashMap<>();
-        expected.put(red, red);
+        expected.put(red, black);
 
         Map<String, String> actual = MAP_FACTORY.createRed(STRINGSTRINGMAP_TYPETAG, prefabValues);
         assertEquals(expected, actual);
@@ -153,7 +153,7 @@ public class GenericPrefabValueFactoryTest {
     @Test
     public void createRedMapOfWildcard() {
         Map<Object, Object> objects = new HashMap<>();
-        objects.put(redObject, redObject);
+        objects.put(redObject, blackObject);
         Map<?, ?> expected = objects;
 
         Map<?, ?> actual = MAP_FACTORY.createRed(WILDCARDMAP_TYPETAG, prefabValues);
@@ -173,7 +173,7 @@ public class GenericPrefabValueFactoryTest {
     @Test
     public void createRedRawMap() {
         Map expected = new HashMap<>();
-        expected.put(redObject, redObject);
+        expected.put(redObject, blackObject);
 
         Map actual = MAP_FACTORY.createRed(RAWMAP_TYPETAG, prefabValues);
         assertEquals(expected, actual);
