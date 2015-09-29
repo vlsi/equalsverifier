@@ -17,6 +17,7 @@ package nl.jqno.equalsverifier;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.internal.ConditionalPrefabValueBuilder;
+import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.PrefabValues;
 import nl.jqno.equalsverifier.internal.TypeTag;
 
@@ -127,10 +128,21 @@ public final class JavaApiPrefabValues {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addLists() {
+        // Add a raw list, as well as a factory, so we already have a List instance to use when adding JavaFX classes.
         addCollectionToPrefabValues(List.class, new ArrayList(), new ArrayList());
-        addCollectionToPrefabValues(CopyOnWriteArrayList.class, new CopyOnWriteArrayList(), new CopyOnWriteArrayList());
-        addCollectionToPrefabValues(LinkedList.class, new LinkedList(), new LinkedList());
-        addCollectionToPrefabValues(ArrayList.class, new ArrayList(), new ArrayList());
+        prefabValues.addFactory(List.class, new CollectionPrefabValueFactory<List>() {
+            @Override public List createEmpty() { return new ArrayList(); }
+        });
+
+        prefabValues.addFactory(CopyOnWriteArrayList.class, new CollectionPrefabValueFactory<CopyOnWriteArrayList>() {
+            @Override public CopyOnWriteArrayList createEmpty() { return new CopyOnWriteArrayList<>(); }
+        });
+        prefabValues.addFactory(LinkedList.class, new CollectionPrefabValueFactory<LinkedList>() {
+            @Override public LinkedList createEmpty() { return new LinkedList<>(); }
+        });
+        prefabValues.addFactory(ArrayList.class, new CollectionPrefabValueFactory<ArrayList>() {
+            @Override public ArrayList createEmpty() { return new ArrayList<>(); }
+        });
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
