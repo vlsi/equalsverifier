@@ -22,6 +22,7 @@ import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefa
 import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.MapPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.PrefabValues;
 import nl.jqno.equalsverifier.internal.TypeTag;
+import nl.jqno.equalsverifier.internal.TypeTag.Wildcard;
 
 import javax.naming.Reference;
 import java.io.File;
@@ -103,8 +104,10 @@ public final class JavaApiPrefabValues {
         put(Short.class, (short)1, (short)2);
 
         put(Object.class, new Object(), new Object());
-        put(Class.class, Class.class, Object.class);
         put(String.class, "one", "two");
+
+        put(Class.class, Class.class, Object.class);
+        prefabValues.put(new TypeTag(Class.class, new TypeTag(Wildcard.class)), Class.class, Object.class);
     }
 
     @SuppressFBWarnings(value = "DMI_HARDCODED_ABSOLUTE_FILENAME", justification = "Just need an instance, not for actual use.")
