@@ -195,11 +195,25 @@ public final class JavaApiPrefabValues {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void addSets() {
+        // Add a raw map, as well as a factory, so we already have a Map instance to use when adding JavaFX classes.
         addCollectionToPrefabValues(Set.class, new HashSet(), new HashSet());
-        addCollectionToPrefabValues(SortedSet.class, new TreeSet(), new TreeSet());
-        addCollectionToPrefabValues(NavigableSet.class, new TreeSet(), new TreeSet());
-        addCollectionToPrefabValues(CopyOnWriteArraySet.class, new CopyOnWriteArraySet(), new CopyOnWriteArraySet());
-        addCollectionToPrefabValues(TreeSet.class, new TreeSet(), new TreeSet());
+        prefabValues.addFactory(Set.class, new CollectionPrefabValueFactory<Set>() {
+            @Override public Set createEmpty() { return new HashSet<>(); }
+        });
+
+        prefabValues.addFactory(SortedSet.class, new CollectionPrefabValueFactory<SortedSet>() {
+            @Override public SortedSet createEmpty() { return new TreeSet(OBJECT_COMPARATOR); }
+        });
+        prefabValues.addFactory(NavigableSet.class, new CollectionPrefabValueFactory<NavigableSet>() {
+            @Override public NavigableSet createEmpty() { return new TreeSet<>(OBJECT_COMPARATOR); }
+        });
+        prefabValues.addFactory(CopyOnWriteArraySet.class, new CollectionPrefabValueFactory<CopyOnWriteArraySet>() {
+            @Override public CopyOnWriteArraySet createEmpty() { return new CopyOnWriteArraySet<>(); }
+        });
+        prefabValues.addFactory(TreeSet.class, new CollectionPrefabValueFactory<TreeSet>() {
+            @Override public TreeSet createEmpty() { return new TreeSet<>(OBJECT_COMPARATOR); }
+        });
+
         put(EnumSet.class, EnumSet.of(Dummy.RED), EnumSet.of(Dummy.BLACK));
 
         BitSet redBitSet = new BitSet();
