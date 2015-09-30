@@ -15,8 +15,8 @@
  */
 package nl.jqno.equalsverifier.internal;
 
-import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.exceptions.ReflectionException;
+import nl.jqno.equalsverifier.prefabvaluefactory.CollectionPrefabValueFactory;
 import nl.jqno.equalsverifier.testhelpers.MockStaticFieldValueStash;
 import nl.jqno.equalsverifier.testhelpers.types.TypeHelper.Interface;
 import org.junit.Before;

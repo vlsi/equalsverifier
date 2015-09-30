@@ -17,6 +17,7 @@ package nl.jqno.equalsverifier.internal;
 
 import nl.jqno.equalsverifier.internal.exceptions.RecursionException;
 import nl.jqno.equalsverifier.internal.exceptions.ReflectionException;
+import nl.jqno.equalsverifier.prefabvaluefactory.PrefabValueFactory;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -35,7 +36,7 @@ public class PrefabValues {
     private static final Map<Class<?>, Class<?>> PRIMITIVE_OBJECT_MAPPER = createPrimitiveObjectMapper();
     private final StaticFieldValueStash stash;
     private final Map<TypeTag, Tuple<?>> values = new HashMap<>();
-    private final Map<Class<?>, GenericPrefabValueFactory<?>> factories = new HashMap<>();
+    private final Map<Class<?>, PrefabValueFactory<?>> factories = new HashMap<>();
 
     public PrefabValues() {
         this(new StaticFieldValueStash());
@@ -63,7 +64,7 @@ public class PrefabValues {
         stash.restoreAll();
     }
 
-    public <T> void addFactory(Class<T> type, GenericPrefabValueFactory<T> factory) {
+    public <T> void addFactory(Class<T> type, PrefabValueFactory<T> factory) {
         factories.put(type, factory);
     }
 
@@ -221,7 +222,7 @@ public class PrefabValues {
         return contains(typeTag) || typeTag.getType().isPrimitive();
     }
 
-    private void putGenericInstances(GenericPrefabValueFactory<?> factory, TypeTag typeTag) {
+    private void putGenericInstances(PrefabValueFactory<?> factory, TypeTag typeTag) {
         for (TypeTag inner : typeTag.getGenericTypes()) {
             putFor(inner);
         }

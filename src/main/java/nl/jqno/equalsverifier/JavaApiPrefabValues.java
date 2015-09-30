@@ -17,12 +17,12 @@ package nl.jqno.equalsverifier;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.internal.ConditionalPrefabValueBuilder;
-import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory;
-import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefabValueFactory;
-import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.MapPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.PrefabValues;
 import nl.jqno.equalsverifier.internal.TypeTag;
 import nl.jqno.equalsverifier.internal.TypeTag.Wildcard;
+import nl.jqno.equalsverifier.prefabvaluefactory.CollectionPrefabValueFactory;
+import nl.jqno.equalsverifier.prefabvaluefactory.GenericPrefabValueFactory;
+import nl.jqno.equalsverifier.prefabvaluefactory.MapPrefabValueFactory;
 
 import javax.naming.Reference;
 import java.io.File;
