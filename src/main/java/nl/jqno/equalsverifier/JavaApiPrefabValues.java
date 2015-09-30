@@ -17,6 +17,7 @@ package nl.jqno.equalsverifier;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import nl.jqno.equalsverifier.internal.ConditionalPrefabValueBuilder;
+import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.CollectionPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.GenericPrefabValueFactory.MapPrefabValueFactory;
 import nl.jqno.equalsverifier.internal.PrefabValues;
@@ -222,18 +223,58 @@ public final class JavaApiPrefabValues {
         put(BitSet.class, redBitSet, blackBitSet);
     }
 
+    @SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON", justification = "For consistency with the other factories")
     @SuppressWarnings("rawtypes")
     private void addQueues() {
-        put(Queue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
-        put(BlockingQueue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
-        put(Deque.class, new ArrayDeque(1), new ArrayDeque(1));
-        put(BlockingDeque.class, new LinkedBlockingDeque(1), new LinkedBlockingDeque(1));
-        put(ArrayBlockingQueue.class, new ArrayBlockingQueue(1), new ArrayBlockingQueue(1));
-        put(ConcurrentLinkedQueue.class, new ConcurrentLinkedQueue(), new ConcurrentLinkedQueue());
-        put(DelayQueue.class, new DelayQueue(), new DelayQueue());
-        put(LinkedBlockingQueue.class, new LinkedBlockingQueue(), new LinkedBlockingQueue());
-        put(PriorityBlockingQueue.class, new PriorityBlockingQueue(), new PriorityBlockingQueue());
-        put(SynchronousQueue.class, new SynchronousQueue(), new SynchronousQueue());
+        prefabValues.addFactory(Queue.class, new CollectionPrefabValueFactory<Queue>() {
+            @Override public Queue createEmpty() { return new ArrayBlockingQueue<>(1); }
+        });
+        prefabValues.addFactory(BlockingQueue.class, new CollectionPrefabValueFactory<BlockingQueue>() {
+            @Override public BlockingQueue createEmpty() { return new ArrayBlockingQueue<>(1); }
+        });
+        prefabValues.addFactory(Deque.class, new CollectionPrefabValueFactory<Deque>() {
+            @Override public Deque createEmpty() { return new ArrayDeque<>(1); }
+        });
+        prefabValues.addFactory(BlockingDeque.class, new CollectionPrefabValueFactory<BlockingDeque>() {
+            @Override public BlockingDeque createEmpty() { return new LinkedBlockingDeque<>(1); }
+        });
+        prefabValues.addFactory(ArrayBlockingQueue.class, new CollectionPrefabValueFactory<ArrayBlockingQueue>() {
+            @Override public ArrayBlockingQueue createEmpty() { return new ArrayBlockingQueue<>(1); }
+        });
+        prefabValues.addFactory(ConcurrentLinkedQueue.class, new CollectionPrefabValueFactory<ConcurrentLinkedQueue>() {
+            @Override public ConcurrentLinkedQueue createEmpty() { return new ConcurrentLinkedQueue<>(); }
+        });
+        prefabValues.addFactory(DelayQueue.class, new GenericPrefabValueFactory<DelayQueue>() {
+            @Override public DelayQueue createEmpty() { return new DelayQueue<>(); }
+
+            @Override
+            public DelayQueue createRed(TypeTag typeTag, PrefabValues pf) {
+                pf.putFor(new TypeTag(Delayed.class));
+                DelayQueue result = createEmpty();
+                result.add(pf.<Delayed>getRed(new TypeTag(Delayed.class)));
+                return result;
+            }
+
+            @Override
+            public DelayQueue createBlack(TypeTag typeTag, PrefabValues pf) {
+                pf.putFor(new TypeTag(Delayed.class));
+                DelayQueue result = createEmpty();
+                result.add(pf.<Delayed>getBlack(new TypeTag(Delayed.class)));
+                return result;
+            }
+        });
+        prefabValues.addFactory(LinkedBlockingQueue.class, new CollectionPrefabValueFactory<LinkedBlockingQueue>() {
+            @Override public LinkedBlockingQueue createEmpty() { return new LinkedBlockingQueue<>(); }
+        });
+        prefabValues.addFactory(PriorityBlockingQueue.class, new CollectionPrefabValueFactory<PriorityBlockingQueue>() {
+            @SuppressWarnings("unchecked")
+            @Override public PriorityBlockingQueue createEmpty() { return new PriorityBlockingQueue<>(1, OBJECT_COMPARATOR); }
+        });
+        prefabValues.addFactory(SynchronousQueue.class, new GenericPrefabValueFactory<SynchronousQueue>() {
+            @Override public SynchronousQueue createEmpty() { return new SynchronousQueue<>(); }
+            @Override public SynchronousQueue createRed(TypeTag typeTag, PrefabValues pf) { return createEmpty(); }
+            @Override public SynchronousQueue createBlack(TypeTag typeTag, PrefabValues pf) { return createEmpty(); }
+        });
     }
 
     private void addJava8ApiClasses() {
