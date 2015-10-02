@@ -129,6 +129,7 @@ public class PrefabValues {
 
     @SuppressWarnings("unchecked")
     private <T> Tuple<T> getTuple(TypeTag typeTag) {
+        putFor(typeTag);
         return (Tuple<T>)values.get(typeTag);
     }
 
@@ -151,9 +152,6 @@ public class PrefabValues {
         }
 
         Tuple<?> tuple = getTuple(typeTag);
-        if (tuple == null) {
-            throw new ReflectionException("No prefab values for " + type + " exist.");
-        }
 
         if (type.isArray() && arraysAreDeeplyEqual(tuple.red, value)) {
             return tuple.black;

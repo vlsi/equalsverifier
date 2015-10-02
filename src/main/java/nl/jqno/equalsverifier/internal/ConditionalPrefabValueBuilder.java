@@ -17,6 +17,7 @@ package nl.jqno.equalsverifier.internal;
 
 import nl.jqno.equalsverifier.internal.exceptions.EqualsVerifierBugException;
 import nl.jqno.equalsverifier.internal.exceptions.ReflectionException;
+import nl.jqno.equalsverifier.prefabvaluefactory.SimplePrefabValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,9 +128,7 @@ public final class ConditionalPrefabValueBuilder {
                 List<Object> objects = new ArrayList<>();
                 for (Class<?> c : paramTypes) {
                     TypeTag typeTag = new TypeTag(c);
-                    if (!prefabValues.contains(typeTag)) {
-                        throw new EqualsVerifierBugException("No prefab values available for type " + c.getCanonicalName());
-                    }
+                    prefabValues.putFor(typeTag);
                     if (instances.size() == 0) {
                         objects.add(prefabValues.getRed(typeTag));
                     }
@@ -225,7 +224,7 @@ public final class ConditionalPrefabValueBuilder {
             if (instances.size() < 2) {
                 throw new EqualsVerifierBugException("Not enough instances");
             }
-            prefabValues.put(new TypeTag(type), instances.get(0), instances.get(1));
+            prefabValues.addFactory(type, new SimplePrefabValueFactory(instances.get(0), instances.get(1)));
         }
     }
 

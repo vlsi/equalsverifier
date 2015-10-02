@@ -74,7 +74,7 @@ class AbstractDelegationChecker<T> implements Checker {
         for (Field field : FieldIterable.of(type)) {
             Class<?> c = field.getType();
             Object instance = safelyGetInstance(c);
-            Object copy = safelyGetInstance(c);
+            Object copy = safelyCopyInstance(instance);
             if (instance != null && copy != null) {
                 checkAbstractMethods(c, instance, copy, true);
             }
@@ -120,19 +120,13 @@ class AbstractDelegationChecker<T> implements Checker {
     @SuppressWarnings("unchecked")
     private <S> S getRedPrefabValue(Class<?> c) {
         TypeTag typeTag = new TypeTag(c);
-        if (prefabValues.contains(typeTag)) {
-            return (S)prefabValues.getRed(typeTag);
-        }
-        return null;
+        return (S)prefabValues.getRed(typeTag);
     }
 
     @SuppressWarnings("unchecked")
     private <S> S getBlackPrefabValue(Class<?> c) {
         TypeTag typeTag = new TypeTag(c);
-        if (prefabValues.contains(typeTag)) {
-            return (S)prefabValues.getBlack(typeTag);
-        }
-        return null;
+        return (S)prefabValues.getBlack(typeTag);
     }
 
     private Object safelyGetInstance(Class<?> c) {
@@ -146,6 +140,15 @@ class AbstractDelegationChecker<T> implements Checker {
         catch (Exception ignored) {
             // If it fails for some reason, any reason, just return null.
             return null;
+        }
+    }
+
+    private Object safelyCopyInstance(Object o) {
+        try {
+            return ObjectAccessor.of(o).copy();
+        }
+        catch (Throwable ignored) {
+            return o;
         }
     }
 

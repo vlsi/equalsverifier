@@ -116,14 +116,6 @@ public class PrefabValuesTest {
     }
 
     @Test
-    public void getOtherWhenClassDoesntExist() {
-        thrown.expect(ReflectionException.class);
-        thrown.expectMessage("No prefab values for class java.lang.Object exist.");
-
-        p.getOther(NON_EXISTING_KEY, VALUE_FOR_NON_EXISTING_KEY);
-    }
-
-    @Test
     public void getOtherWhenClassIsNull() {
         thrown.expect(ReflectionException.class);
 

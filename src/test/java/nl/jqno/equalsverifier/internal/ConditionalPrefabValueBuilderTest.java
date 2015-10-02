@@ -105,46 +105,38 @@ public class ConditionalPrefabValueBuilderTest {
 
     @Test
     public void prefabValuesContainsInstances_whenPrefabValuesAreProvided() {
-        prefabValues.put(new TypeTag(String.class), "red", "black");
+        prefabValues.put(new TypeTag(Value.class), new Value(), new Value());
 
-        ConditionalPrefabValueBuilder.of(StringsContainer.class.getName())
-                .instantiate(classes(String.class, String.class), prefabValues)
-                .instantiate(classes(String.class, String.class), prefabValues)
+        ConditionalPrefabValueBuilder.of(ValuesContainer.class.getName())
+                .instantiate(classes(Value.class, Value.class), prefabValues)
+                .instantiate(classes(Value.class, Value.class), prefabValues)
                 .addTo(prefabValues);
 
-        StringsContainer red = prefabValues.getRed(new TypeTag(StringsContainer.class));
-        StringsContainer black = prefabValues.getBlack(new TypeTag(StringsContainer.class));
+        ValuesContainer red = prefabValues.getRed(new TypeTag(ValuesContainer.class));
+        ValuesContainer black = prefabValues.getBlack(new TypeTag(ValuesContainer.class));
         assertNotEquals(red, black);
-        assertEquals(red.s, prefabValues.getRed(new TypeTag(String.class)));
-        assertEquals(black.s, prefabValues.getBlack(new TypeTag(String.class)));
-    }
-
-    @Test
-    public void throwsBug_whenRequiredPrefabValuesAreNotAvailable() {
-        ConditionalPrefabValueBuilder builder = ConditionalPrefabValueBuilder.of(StringsContainer.class.getName());
-
-        thrown.expect(EqualsVerifierBugException.class);
-        builder.instantiate(classes(String.class, String.class), prefabValues);
+        assertEquals(red.s, prefabValues.getRed(new TypeTag(Value.class)));
+        assertEquals(black.s, prefabValues.getBlack(new TypeTag(Value.class)));
     }
 
     @Test
     public void nothingHappens_whenTypeDoesNotExist_givenConstructorWithPrefabValues() {
-        prefabValues.put(new TypeTag(String.class), "red", "black");
+        prefabValues.put(new TypeTag(Value.class), new Value(), new Value());
 
         ConditionalPrefabValueBuilder.of("this.type.does.not.exist")
-                .instantiate(classes(String.class, String.class), prefabValues)
-                .instantiate(classes(String.class, String.class), prefabValues)
+                .instantiate(classes(Value.class, Value.class), prefabValues)
+                .instantiate(classes(Value.class, Value.class), prefabValues)
                 .addTo(throwingPrefabValues);
 
         throwingPrefabValues.verify();
     }
     @Test
     public void nothingHappens_whenNonExistingConstructorOverloadIsCalled_givenPrefabValues() {
-        prefabValues.put(new TypeTag(String.class), "red", "black");
+        prefabValues.put(new TypeTag(Value.class), new Value(), new Value());
 
-        ConditionalPrefabValueBuilder.of(StringsContainer.class.getName())
-                .instantiate(classes(String.class, String.class), prefabValues)
-                .instantiate(classes(String.class), prefabValues)
+        ConditionalPrefabValueBuilder.of(ValuesContainer.class.getName())
+                .instantiate(classes(Value.class, Value.class), prefabValues)
+                .instantiate(classes(Value.class), prefabValues)
                 .addTo(throwingPrefabValues);
 
         throwingPrefabValues.verify();
@@ -152,14 +144,14 @@ public class ConditionalPrefabValueBuilderTest {
 
     @Test
     public void throwsBug_whenInstantiateIsCalledMoreThanTwice_givenPrefabValues() {
-        prefabValues.put(new TypeTag(String.class), "red", "black");
+        prefabValues.put(new TypeTag(Value.class), new Value(), new Value());
 
-        ConditionalPrefabValueBuilder builder = ConditionalPrefabValueBuilder.of(StringsContainer.class.getName())
-                .instantiate(classes(String.class, String.class), prefabValues)
-                .instantiate(classes(String.class, String.class), prefabValues);
+        ConditionalPrefabValueBuilder builder = ConditionalPrefabValueBuilder.of(ValuesContainer.class.getName())
+                .instantiate(classes(Value.class, Value.class), prefabValues)
+                .instantiate(classes(Value.class, Value.class), prefabValues);
 
         thrown.expect(EqualsVerifierBugException.class);
-        builder.instantiate(classes(String.class, String.class), prefabValues);
+        builder.instantiate(classes(Value.class, Value.class), prefabValues);
     }
 
     @Test
@@ -395,10 +387,11 @@ public class ConditionalPrefabValueBuilderTest {
         @Override public int hashCode() { return defaultHashCode(this); }
     }
 
-    static final class StringsContainer {
-        @SuppressWarnings("unused") private final String s;
-        @SuppressWarnings("unused") private final String t;
-        public StringsContainer(String s, String t) { this.s = s; this.t = t; }
+    static final class Value {}
+    static final class ValuesContainer {
+        @SuppressWarnings("unused") private final Value s;
+        @SuppressWarnings("unused") private final Value t;
+        public ValuesContainer(Value s, Value t) { this.s = s; this.t = t; }
         @Override public boolean equals(Object obj) { return defaultEquals(this, obj); }
         @Override public int hashCode() { return defaultHashCode(this); }
     }
