@@ -34,6 +34,12 @@ public class StaticFieldValueStash {
      *          static fields.
      */
     public void backup(TypeTag typeTag) {
+        Class<?> i = typeTag.getType().getSuperclass();
+        while (i != null && !i.equals(Object.class)) {
+            backup(new TypeTag(i));
+            i = i.getSuperclass();
+        }
+
         if (stash.containsKey(typeTag)) {
             return;
         }
